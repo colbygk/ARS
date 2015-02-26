@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./ars-server -directory="../../web" -port=3500
+
