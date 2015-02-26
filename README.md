@@ -12,8 +12,10 @@ This source tree is comprised of two main components:
 
      go
      go/main.go
+     ...
      web
      web/styles
+     ...
 
 
 ## Building
@@ -29,9 +31,16 @@ This source tree is comprised of two main components:
 
  Then, build the ARS web server binary:
 
+     $ cd ars-server
      $ go build
 
  After this, it will be runnable:
 
-     $ ./ars
+     $ ./ars-server -directory="../../web" -port=3500
+
+ A UNIXy launcher script is available in the same directory as ars-server, called 'ars-launch'
+
+     $ ./ars-launch
+
+ This script will do essentially the same as the longer command-line above.
 
