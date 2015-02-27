@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" ng-app="myapp">
+<head>
+	<meta charset="UTF-8">
+	<title>NM Air</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.0/cyborg/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/static/fonts/airstream_regular_macroman/stylesheet.css">
+	<link rel="stylesheet" href="/static/css/ticketing.css">
+  <style>
+    h1 { font-family: 'airstreamregular',Serif; font-size: 64pt; }; 
+    .well { font-family: Serif; };
+  </style>
+</head>
+<!-- putting this at the top to remove the jarring load -->
+<script src="http://code.angularjs.org/1.2.10/angular.min.js"></script>
+<body ng-controller="MainCtl">
+	<div class="jumbotron">
+		<button class="btn btn-primary pull-right" ng-click="add()">
+			<i class="fa fa-plus"></i> Add Ticket
+		</button>
+		<h1>NM Air</h1>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3 well">
+				<h3>Passengers</h3>
+				<ul class="nav nav-pills nav-stacked">
+					<li ng-class="{active: t.passenger == selected.passenger}" ng-repeat="t in tickets">
+						<a href="" ng-click="get($index)">{{t.passenger}}</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-sm-6" ng-show="selected">
+				<h2>{{selected.passenger}}</h2>
+				<dl class="dl-horizontal">
+					<dt>Flight:</dt>
+          <div class="tooltip" ng-click="$event.stopPropagation()" ng-show="showtooltip">
+           <input type="text" ng-model="selected.flight" />
+          </div>
+				  	<dd ng-click="toggleToolTip($event)">{{selected.flight}}</dd>
+				</dl>
+			</div>
+			<div class="col-sm-3" ng-show="selected">
+				<button class="btn btn-primary form-control" ng-click="update(selected.idx)">
+					<i class="fa fa-pencil"></i> Update this ticket
+				</button>
+				<button class="btn btn-danger form-control" ng-click="remove(selected.idx)">
+					<i class="fa fa-trash-o"></i> Remove this ticket
+				</button>
+			</div>
+		</div>
+	</div>
+<script src="http://code.angularjs.org/1.2.10/angular-resource.min.js"></script>
+<script>
+	// new dependency: ngResource is included just above
+	var myapp = new angular.module("myapp", ["ngResource"]);
+
+	// inject the $resource dependency here
+	myapp.controller("MainCtl", ["$scope", "$resource", function($scope, $resource){
+		// I designed the backend to play nicely with angularjs so this is all the
+		// setup we need to do all of the ususal operations.
+		var Ticket = $resource("/tickets/:id", {id: '@id'}, {});
+
+    $scope.showtooltip = false;
+		$scope.selected = null;
+
+    $scope.hideToolTip = function(){
+      $scope.showtooltip = false;
+    }
+
+    $scope.toggleToolTip = function(e){
+      e.stopPropagation();
+      $scope.showtooltip = !$scope.showtooltip;
+    }
+
+		$scope.list = function(idx){
+			// Notice calls to Ticket are often given callbacks.
+			Ticket.query(function(data){
+				$scope.tickets = data;
+				if(idx != undefined) {
+					$scope.selected = $scope.tickets[idx];
+					$scope.selected.idx = idx;
+				}
+			}, function(error){
+				alert(error.data);
+			});
+		};
+
+		$scope.list();
+
+		$scope.get = function(idx){
+			// Passing parameters to Ticket calls will become arguments if
+			// we haven't defined it as part of the path (we did with id)
+			Ticket.get({id: $scope.tickets[idx].id}, function(data){
+				$scope.selected = data;
+				$scope.selected.idx = idx;
+			});
+		};
+
+		$scope.add = function() {
+			// I was lazy with the user input.
+			var passenger = prompt("Enter the passenger's name.");
+			if(passenger == null){
+				return;
+			}
+			var flight = prompt("Enter the flight number.");
+			if(flight == null){
+				return;
+			}
+			// Creating a blank ticket object means you can still $save
+			var newTicket = new Ticket();
+			newTicket.passenger = passenger;
+			newTicket.flight = flight;
+			newTicket.$save();
+
+			$scope.list();
+		};
+
+		$scope.update = function(idx) {
+			var ticket = $scope.tickets[idx];
+			var passenger = prompt("Enter a new passenger", ticket.passenger);
+			if(passenger == null) {
+				return;
+			}
+			var flight = prompt("Enter a new flight", ticket.flight);
+			if(flight == null) {
+				return;
+			}
+			ticket.passenger = passenger;
+			ticket.flight = flight;
+			// Noticed I never created a new Ticket()?
+			ticket.$save();
+
+			$scope.list(idx);
+		};
+
+		$scope.remove = function(idx){
+			$scope.tickets[idx].$delete();
+			$scope.selected = null;
+			$scope.list();
+
+
+		};
+	}]);
+</script>
+</body>
+</html>
