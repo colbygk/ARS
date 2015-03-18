@@ -1,3 +1,92 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+<script src="http://code.angularjs.org/1.2.10/angular.min.js"></script>
 
-Max?  Nathan?
+<style>
+	.ng-invalid.ng-dirty {
+		border-color: red;
+	}
+	.ng-valid.ng-dirty {
+		border-color: green;
+	}
+</style>
+
+</head>
+
+<body>
+
+<div ng-app="payment" ng-controller="paymentController as payment">
+
+	<form name="paymentForm" novalidate>
+		Payment Information<br>
+		Card Type * <select ng-model="payment.info.cardType" required>
+			<option>Visa</option>
+			<option>MasterCard</option>
+			<option>Discover</option>
+			<option>American Express</option>
+			<option>Picard</option>
+		</select> <br>
+		Card Number * <input type="number" ng-model="payment.info.cardNumber" required/> <br>
+		Expiration Date * <input type="month" ng-model="payment.info.expireDate" required/> <br>
+		CVV * <input type="number" ng-model="payment.info.cvv" required/> <br>
+		Country *
+		<select ng-model="payment.info.country" required>
+			<option>United States</option>
+			<option>Pandora</option>
+		</select> <br>
+		Address 1 * <input type="text" ng-model="payment.info.address1" required/> <br>
+		Address 2 <input type="text" ng-model="payment.info.address2" /> <br>
+		City * <input type="text" ng-model="payment.info.city" required/> <br>
+		State * 
+		<select ng-model="payment.info.state" required>
+			<option>New Mexico</option>
+			<option>Hyrule</option>
+		</select> <br>
+		Zip * <input type="number" ng-model="payment.info.zip" required/> <br>
+		<input type="submit"/> <br>
+	</form>
+	
+	<br>
+	<div>Payment information is {{paymentForm.$valid}}</div>
+	<br>
+	
+	<blockquote>
+	{{"Card Type: " + payment.info.cardType}}<br>
+	{{"Card Number: " + payment.info.cardNumber}}<br>
+	{{"Expiration Date: " + payment.info.expireDate}}<br>
+	{{"CVV: " + payment.info.cvv}}<br>
+	{{"Country: " + payment.info.country}}<br>
+	{{"Address 1: " + payment.info.address1}}<br>
+	{{"Address 2: " + payment.info.address2}}<br>
+	{{"City: " + payment.info.city}}<br>
+	{{"State: " + payment.info.state}}<br>
+	{{"Zip: " + payment.info.zip}}<br>
+	</blockquote>
+	
+</div>
+
+<script>
+	var app = angular.module("payment", []);
+	
+	app.controller("paymentController", function () {
+		this.info = {};
+	});
+	
+	var paymentInfo = {
+		cardType: "",
+		cardNumber: "",
+		expireDate: "",
+		cvv: "",
+		country: "",
+		address1: "",
+		address2: "",
+		city: "",
+		state: "",
+		zip: ""
+	};
+</script>
+
+</body>
+</html>
