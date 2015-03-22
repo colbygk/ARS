@@ -16,50 +16,93 @@
 
 <!-- putting this at the top to remove the jarring load -->
 <script src="http://code.angularjs.org/1.2.10/angular.min.js"></script>
-<body ng-controller="MainCtl">
+
+<body>
+
 	<div class="jumbotron">
-		<button class="btn btn-primary pull-right" ng-click="add()">
-			<i class="fa fa-plus"></i> Add Ticket
-		</button>
 		<h1>NM Air</h1>
+		<button class="btn btn-danger pull-right" ng-click="remove(selected.idx)">
+			<i class="fa"></i> Sign-in with Google+
+		</button>
 	</div>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-sm-3 well">
-				<h3>Passengers</h3>
-				<ul class="nav nav-pills nav-stacked">
-					<li ng-class="{active: t.passenger == selected.passenger}" ng-repeat="t in tickets">
-						<a href="" ng-click="get($index)">{{t.passenger}}</a>
-					</li>
-				</ul>
-			</div>
-			<div class="col-sm-6" ng-show="selected">
-				<h2>{{selected.passenger}}</h2>
-				<dl class="dl-horizontal">
-					<dt>Flight:</dt>
-          <div class="tooltip" ng-click="$event.stopPropagation()" ng-show="showtooltip">
-           <input type="text" ng-model="selected.flight" />
-          </div>
-				  	<dd ng-click="toggleToolTip($event)">{{selected.flight}}</dd>
-				</dl>
-			</div>
-			<div class="col-sm-3" ng-show="selected">
-				<button class="btn btn-primary form-control" ng-click="update(selected.idx)">
-					<i class="fa fa-pencil"></i> Update this ticket
-				</button>
-				<button class="btn btn-danger form-control" ng-click="remove(selected.idx)">
-					<i class="fa fa-trash-o"></i> Remove this ticket
-				</button>
-			</div>
-		</div>
-	</div>
+
+	<div ng-app="mytable" ng-controller="MainController2">
+		<style>
+			table, th , td  {
+			  	border: 1px solid black;
+			  	padding: 15px;
+    			border-radius: 10px;
+    			-moz-border-radius: 15px;
+			}
+			table tr:nth-child(odd)	{
+			  background-color: #333333;
+			  color: white;
+			}
+			table tr:nth-child(even) {
+			  background-color: #0000ff;
+			  color: white;
+			}
+		</style>
+
+		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		</head>
+
+		<body>
+		<table class="table" style="background-color: #666666; border-radius: 0px">
+		<thead>
+		<tr style="background-color: orange">
+			<th style="color:black">Ticket Summary</th> 
+		</tr>
+		</thead>
+		</table>
+
+		<table class="table" style="background-color: #666666; border-radius: 0px">
+		<thead>
+		<tr style="background-color: #666666">
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>FlightID</th>
+			<th><img src=".\images\depart_plane.png" alt="depart" height="24" width="24"> Depart City</th>
+			<th><img src=".\images\arrive_plane.png" alt="arriving" height="24" width="24">Destination City</th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr ng-repeat="row in rowCollection">
+			<td>{{row.firstName}}</td>
+			<td>{{row.lastName}}</td>
+			<td>{{row.flightID}}</td>
+			<th>{{row.sourceCity}}</th>
+			<th>{{row.destinationCity}}</th>
+		</tr>
+		</tbody>
+		</table>
+
+	<img src="./images/qr_code.png" alt="QR" height="128" width="128">
+
+	<button class="btn btn-primary pull-right" style="margin:15px" ng-click="add()">
+			<i class="fa"></i> Print Ticket
+		</button>
+
+	<script>
+</div>
+
 <script src="http://code.angularjs.org/1.2.10/angular-resource.min.js"></script>
 <script>
+	
+	var mytable = new angular.module("mytable", ["ngResource"]);
+
+	mytable.controller("MainController2", ["$scope", "$resource", function($scope, $resource){
+		$scope.rowCollection = [
+    		{firstName: 'Laurent', lastName: 'Renard', sourceCity: ' ', destinationCity: 102, flightID: 'whatever@gmail.com'},
+    		{firstName: 'Laurent2', lastName: 'Renard', sourceCity: ' ', destinationCity: 102, flightID: 'whatever@gmail.com'},
+		];});
+
 	// new dependency: ngResource is included just above
 	var myapp = new angular.module("myapp", ["ngResource"]);
 
 	// inject the $resource dependency here
-	myapp.controller("MainCtl", ["$scope", "$resource", function($scope, $resource){
+	myapp.controller("MainController", ["$scope", "$resource", function($scope, $resource){
 		// I designed the backend to play nicely with angularjs so this is all the
 		// setup we need to do all of the ususal operations.
 		var Ticket = $resource("/tickets/:id", {id: '@id'}, {});
@@ -125,6 +168,7 @@
 			if(passenger == null) {
 				return;
 			}
+
 			var flight = prompt("Enter a new flight", ticket.flight);
 			if(flight == null) {
 				return;
@@ -141,10 +185,9 @@
 			$scope.tickets[idx].$delete();
 			$scope.selected = null;
 			$scope.list();
-
-
 		};
 	}]);
+
 </script>
 </body>
 </html>
