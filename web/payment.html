@@ -17,35 +17,67 @@
 
 <body>
 
-<div ng-app="payment" ng-controller="paymentController as payment">
+<div ng-controller="customerController as customer">
+	<form name="customerForm" novalidate>
+		Customer Information <br>
+		Name <input type="text" ng-model="customer.name" required/> <br>
+		Address 1 <input type="text" ng-model="customer.address1" required/> <br>
+		Address 2 <input type="text" ng-model="customer.address2" required/> <br>
+		City <input type="text" ng-model="customer.city" required/> <br>
+		State <input type="text" ng-model="customer.state" required/> <br>
+		Country 
+		<select ng-model="customer.country" required>
+			<option>United States</option>
+			<option>Pandora</option>
+		</select> <br>
+		Zip <input type="number" ng-model="customer.zip" required/> <br>
+	</form>
+</div>
+
+<br>
+
+<div  ng-app="payment" ng-controller="paymentController as payment">
 
 	<form name="paymentForm" novalidate>
 		Payment Information<br>
-		Card Type * <select ng-model="payment.info.cardType" required>
+		
+		Card Type *
+		<select ng-model="payment.info.cardType" required>
 			<option>Visa</option>
 			<option>MasterCard</option>
 			<option>Discover</option>
 			<option>American Express</option>
 			<option>Picard</option>
 		</select> <br>
+		
+		Name on Card * <input type="text" ng-model="payment.info.nameOnCard" required/> <br>
 		Card Number * <input type="number" ng-model="payment.info.cardNumber" required/> <br>
 		Expiration Date * <input type="month" ng-model="payment.info.expireDate" required/> <br>
 		CVV * <input type="number" ng-model="payment.info.cvv" required/> <br>
-		Country *
-		<select ng-model="payment.info.country" required>
-			<option>United States</option>
-			<option>Pandora</option>
-		</select> <br>
-		Address 1 * <input type="text" ng-model="payment.info.address1" required/> <br>
-		Address 2 <input type="text" ng-model="payment.info.address2" /> <br>
-		City * <input type="text" ng-model="payment.info.city" required/> <br>
-		State * 
-		<select ng-model="payment.info.state" required>
-			<option>New Mexico</option>
-			<option>Hyrule</option>
-		</select> <br>
-		Zip * <input type="number" ng-model="payment.info.zip" required/> <br>
-		<input type="submit"/> <br>
+		
+		<br>
+		<input type="checkbox" ng-model="payment.sameAddress"> Billing address same as customer address. <br>
+		<br>
+		
+		<div ng-hide="payment.sameAddress">
+		
+			Address 1 * <input type="text" ng-model="payment.info.address1" required/> <br>
+			Address 2 <input type="text" ng-model="payment.info.address2" /> <br>
+			City * <input type="text" ng-model="payment.info.city" required/> <br>
+			State * 
+			<select ng-model="payment.info.state" required>
+				<option>New Mexico</option>
+				<option>Hyrule</option>
+			</select> <br>
+			Country *
+			<select ng-model="payment.info.country" required>
+				<option>United States</option>
+				<option>Pandora</option>
+			</select> <br>
+			Zip * <input type="number" ng-model="payment.info.zip" required/> <br>
+			<input type="submit"/> <br>
+		
+		</div>
 	</form>
 	
 	<br>
@@ -54,6 +86,7 @@
 	
 	<blockquote>
 	{{"Card Type: " + payment.info.cardType}}<br>
+	{{"Name on Card: " + payment.info.nameOnCard}}<br>
 	{{"Card Number: " + payment.info.cardNumber}}<br>
 	{{"Expiration Date: " + payment.info.expireDate}}<br>
 	{{"CVV: " + payment.info.cvv}}<br>
@@ -72,10 +105,12 @@
 	
 	app.controller("paymentController", function () {
 		this.info = {};
+		this.sameAddress = false;
 	});
 	
 	var paymentInfo = {
 		cardType: "",
+		nameOnCard: "",
 		cardNumber: "",
 		expireDate: "",
 		cvv: "",
