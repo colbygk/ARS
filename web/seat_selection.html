@@ -12,43 +12,47 @@
 		myDiagram =
 			$(go.Diagram, "myDiagram",  // must be the ID or reference to div
 			{
-				autoScale: go.Diagram.Uniform,
-				//allowMove: false,
-				//allowGroup: false,
-				//allowSelect: false,
+				//autoScale: go.Diagram.Uniform,
+				allowMove: false,
+				allowGroup: false,
+				allowSelect: false,
 				//allowHorizontalScroll: false,
 				//allowVerticalScroll: false,
-				contentAlignment: go.Spot.Center,
-				layout: 
+				//contentAlignment: go.Spot.Center,
+				/*layout: 
 					$(go.GridLayout,
-					{ comparer: go.GridLayout.smartComparer })
+					{ comparer: go.GridLayout.smartComparer })*/
 					// other properties are set by the layout function, defined below
 			});
 			
 		// define the Node template
 		myDiagram.nodeTemplate =
-			$(go.Node, "Spot",
+			$(go.Part, //"Spot",
 			{ 
 				// make sure the Node.location is different from the Node.position
-				locationSpot: go.Spot.Center,
+				//locationSpot: go.Spot.Center,
+				locationObjectName: "SHAPE",
 				click: showArrowInfo,
 				toolTip:
 				$(go.Adornment, "Auto",
 				$(go.Shape, { fill: "#EFEFCC" }),
 				$(go.TextBlock, { margin: 4 },
 					new go.Binding("text", "text"))
-				)
+				),
 			},
+			new go.Binding("location", "loc", go.Point.parse), 
 			new go.Binding("text", "text"),  // for sorting
 			$(go.Shape, "Card",
 			{ 
+				name: "SHAPE",
 				fill: "lightgray",
 				stroke: "black",
 				desiredSize: new go.Size(25, 25),
-				minSize: new go.Size(25, 25)
+				minSize: new go.Size(25, 25),
+				//position: new go.Point(10,0)
 			},
 			new go.Binding("fill", "fill"),
-			new go.Binding("oldFill", "oldFill"),
+			//new go.Binding("oldFill", "oldFill"),
 			new go.Binding("desiredSize", "size")),
 			$(go.TextBlock,
 				// the default alignment is go.Spot.Center
@@ -56,7 +60,7 @@
 			);
 		
 		updateData(); // generate random nodes
-		layout(); // layout using the latest parameters
+		//layout(); // layout using the latest parameters
 				
 		//updateDiagramSize(35, new go.Size(1, 1));
 	}
@@ -79,12 +83,19 @@
 		var nodeDataArray = [];
 		var brushColor;
 		for (var i = 0; i < itemCount; i++) {
-			if (i % colorGroupSize === 0) { brushColor = go.Brush.randomColor(72, 255); }
+			if (i % colorGroupSize === 0) { 
+				brushColor = go.Brush.randomColor(72, 255);
+				//nodeDataArray[i].node.position = new go.Point(i, i);
+				//var data = myDiagram.model.findNodeDataForKey(obj.part.text);
+				//var newFill = data.fill === data.oldFill ? "#33B5E5" : data.oldFill;
+				//myDiagram.model.setDataProperty(data, "fill", newFill);
+			}
 			nodeDataArray.push({
 				key: i,
 				text: i.toString(),
 				fill: brushColor,
-				oldFill: brushColor	
+				oldFill: brushColor	,
+				loc: i.toString() + " " + i.toString()
 			});	  
 		}
 		
