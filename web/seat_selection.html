@@ -12,27 +12,19 @@
 		myDiagram =
 			$(go.Diagram, "myDiagram",  // must be the ID or reference to div
 			{
-				//autoScale: go.Diagram.Uniform,
+				autoScale: go.Diagram.Uniform,
 				allowMove: false,
 				allowGroup: false,
 				allowSelect: false,
 				allowHorizontalScroll: false,
 				allowVerticalScroll: false,
-				//contentAlignment: go.Spot.Center,
-				/*layout: 
-					$(go.GridLayout,
-					{ comparer: go.GridLayout.smartComparer })*/
-					// other properties are set by the layout function, defined below
 			});
 			
 		// define the Node template
 		myDiagram.nodeTemplate =
 			$(go.Part, "Spot",
 			{ 
-				// make sure the Node.location is different from the Node.position
-				locationSpot: go.Spot.Center,
-				locationObjectName: "SHAPE",
-				click: onClickSeat,
+				click: onClickShape,
 				toolTip:
 					$(go.Adornment, "Auto",
 					$(go.Shape, { fill: "#EFEFCC" }),
@@ -40,187 +32,104 @@
 						new go.Binding("text", "text"))
 					),
 			},
-			new go.Binding("location", "loc", go.Point.parse), 
-			new go.Binding("text", "text"),  // for sorting
+			new go.Binding("location", "locPoint"),
+			new go.Binding("text", "text"),  // for sorting, apparently more...
 			$(go.Shape, "Card",
 			{ 
-				name: "SHAPE",
 				fill: "lightgray",
 				stroke: "black",
 				desiredSize: new go.Size(25, 25),
 				minSize: new go.Size(25, 25),
 			},
 			new go.Binding("fill", "fill"),
-			//new go.Binding("oldFill", "oldFill"),
 			new go.Binding("desiredSize", "size")),
 			$(go.TextBlock,
 				// the default alignment is go.Spot.Center
 				new go.Binding("text", "text"))
 			);
 		
-		updateData(); // generate random nodes
-		//layout(); // layout using the latest parameters
-				
-		//updateDiagramSize(35, new go.Size(1, 1));
+		generateLayout(0); // generate layout
 	}
 	  
-	function onClickSeat(e, obj) {
+	function onClickShape(e, obj) {
 		var data = myDiagram.model.findNodeDataForKey(obj.part.text);
 		var newFill = data.fill === data.oldFill ? "#33B5E5" : data.oldFill;
 		myDiagram.model.setDataProperty(data, "fill", newFill);
 		
 		//window.alert("Clicked seat: " + obj.part.text + "\n" + data.fill);
 	}
-	  
-	function updateData() {
-		var colorGroupSize = document.getElementById("colorGroupSize").value;
-		var itemCount = document.getElementById("itemCount").value;
-		colorGroupSize = parseFloat(colorGroupSize, 1);
-		itemCount = parseFloat(itemCount, 1);
-
-		// create an array of data describing randomly colored and sized nodes
+	 
+	// @param layoutMode  0 == mode 1, else mode 2
+	function generateLayout(layoutMode) {
+		var itemCount;
+		var blankRows = new go.List("number");
+		if (layoutMode === 0) { 
+			itemCount = 84;
+			blankRows.add(2);
+			blankRows.add(6);
+		} else {
+			itemCount = 48;
+			blankRows.add(2);
+		}
+		
+		var colorIndex = 0;
+		var colorList = new go.List("string");
+		colorList.add("#EB6E44");
+		colorList.add("#FFF5C3");
+		colorList.add("#8DCDC1");
+		
 		var nodeDataArray = [];
-		var brushColor;
+		var row = -1;
+		var column;
+		var columnWrap = 12;
+		var paddedItemSize = 28;
+		var locPoint;
+		
 		for (var i = 0; i < itemCount; i++) {
-			if (i % colorGroupSize === 0) { 
-				brushColor = go.Brush.randomColor(72, 255);
-				//nodeDataArray[i].node.position = new go.Point(i, i);
-				//var data = myDiagram.model.findNodeDataForKey(obj.part.text);
-				//var newFill = data.fill === data.oldFill ? "#33B5E5" : data.oldFill;
-				//myDiagram.model.setDataProperty(data, "fill", newFill);
-			}
+			if (i % columnWrap == 0) { ++row; }
+			if (blankRows.contains(row)) { ++row; colorIndex = ++colorIndex % 3; }
+			
+			column = i % columnWrap;
+			locPoint = new go.Point((column * paddedItemSize), (row * paddedItemSize));
+					
 			nodeDataArray.push({
-				key: i,
-				text: i.toString(),
-				fill: brushColor,
-				oldFill: brushColor,
-				loc: i.toString() + " " + i.toString()
-			});	  
+				key:  i + 1,
+				text: (i + 1).toString(),
+				fill: colorList.get(colorIndex),
+				oldFill: colorList.get(colorIndex),
+				locPoint: locPoint
+			});
+			
+			//console.log(i + ":  " + locPoint + "\n");
 		}
-		
-		// randomize the data
-		for (i = 0; i < nodeDataArray.length; i++) {
-			var swap = Math.floor(Math.random() * nodeDataArray.length);
-			var temp = nodeDataArray[swap];
-			nodeDataArray[swap] = nodeDataArray[i];
-			nodeDataArray[i] = temp;
-		}
-		
+
 		// create a Model that does not know about link or group relationships
 		myDiagram.model = new go.Model(nodeDataArray);
-		layout();
+		
+		// resize the div
+		resizeDiv(++row, paddedItemSize, columnWrap);
 	  }
 	  
-	  // Update the layout from the controls, and then perform the layout again
-	function layout() {
-		myDiagram.startTransaction("change Layout");
-		
-		//var itemCount = document.getElementById("itemCount").value;
-		var itemCount = myDiagram.model.nodeDataArray.length + 1; 
-		var lay = myDiagram.layout;
-		var wrappingColumn = document.getElementById("wrappingColumn").value;
-		lay.wrappingColumn = parseFloat(wrappingColumn, 10);
-		lay.wrappingColumn = Math.min(itemCount, lay.wrappingColumn);
-		
-		/*var wrappingWidth = document.getElementById("wrappingWidth").value;
-		lay.wrappingWidth = parseFloat(wrappingWidth, 10);*/
-		
-		var cellSize = document.getElementById("cellSize").value;
-		lay.cellSize = go.Size.parse(cellSize);
-		
-		var spacing = document.getElementById("spacing").value;
-		lay.spacing = go.Size.parse(spacing);
-		
-		/*var alignment = getRadioValue("alignment");
-		if (alignment === "Position") { lay.alignment = go.GridLayout.Position; }
-		else { lay.alignment = go.GridLayout.Location; }*/
-		lay.alignment = go.GridLayout.Position;
-		
-		var arrangement = getRadioValue("arrangement");
-		if (arrangement === "LeftToRight") { lay.arrangement = go.GridLayout.LeftToRight; }
-		else { lay.arrangement = go.GridLayout.RightToLeft; }
-		
-		var sorting = document.getElementById("sorting").value;
-		switch (sorting) {
-			default:
-			case "Forward": lay.sorting = go.GridLayout.Forward; break;
-			case "Reverse": lay.sorting = go.GridLayout.Reverse; break;
-			case "Ascending": lay.sorting = go.GridLayout.Ascending; break;
-			case "Descending": lay.sorting = go.GridLayout.Descending; break;
-		}
+	  function resizeDiv(rows, paddedItemSize, columnWrap) {
+		myDiagram.startTransaction("resize div");
 		
 		var div = myDiagram.div;
-		var scale = myDiagram.model.scale;
-		var rows = Math.ceil(itemCount/lay.wrappingColumn);
-		var newHeight = (rows * 25) + (rows * lay.spacing.height);
-		var newWidth = (lay.wrappingColumn * 25) + (lay.wrappingColumn * lay.spacing.width);
+		var newHeight = (rows * paddedItemSize) + (2 * myDiagram.padding.top);
+		var newWidth = (paddedItemSize * columnWrap) + (2 * myDiagram.padding.left);
 
 		div.style.width = newWidth.toString() + "px";
 		div.style.height = newHeight.toString() + "px";
 		myDiagram.requestUpdate();
 
-		myDiagram.commitTransaction("change Layout");
-	}
+		myDiagram.commitTransaction("resize div");
+	  }
 	  
-	function getRadioValue(name) {
-		var radio = document.getElementsByName(name);
-		for (var i = 0; i < radio.length; i++) {
-			if (radio[i].checked) return radio[i].value;
-		}
-	}
-
-	/*function reload() {
-		location.reload(false);
-	}*/
 </script>
 </head>
 
 <body onload="init()">
 <div id="sample">
-  <div style="margin-bottom: 5px; padding: 5px; background-color: aliceblue">
-	<span style="display: inline-block; vertical-align: top; padding: 5px">
-	  <b>GridLayout Properties</b>
-	  <br />
-	  Number of Items:
-	  <input type="text" size="3" id="itemCount" value="315" onchange="updateData()" />
-	  <br />
-	  Color Group Size:
-	  <input type="text" size="3" id="colorGroupSize" value="105" onchange="updateData()" />
-	  <br />
-	  Wrapping Column:
-	  <input type="text" size="3" id="wrappingColumn" value="35" onchange="layout()" />
-	  (NaN means there's no limit)
-	  <br />
-	  <!--Wrapping Width:
-	  <input type="text" size="3" id="wrappingWidth" value="NaN" onchange="layout()" />
-	  (NaN means use the diagram's viewport width)
-	  <br />-->
-	  Cell Size:
-	  <input type="text" size="6" id="cellSize" value="NaN NaN" onchange="layout()" />
-	  (NaN x NaN means use a cell size big enough to hold any node)
-	  <br />
-	  Spacing:
-	  <input type="text" size="6" id="spacing" value="2 2" onchange="layout()" />
-	  (the minimum space between the nodes)
-	  <br />
-	  <!--Alignment:
-	  <input type="radio" name="alignment" onclick="layout()" value="Position" checked="checked" /> Position
-	  <input type="radio" name="alignment" onclick="layout()" value="Location" /> Location
-	  <br />-->
-	  Arrangement:
-	  <input type="radio" name="arrangement" onclick="layout()" value="LeftToRight" checked="checked" /> LeftToRight
-	  <input type="radio" name="arrangement" onclick="layout()" value="RightToLeft" /> RightToLeft
-	  <br />
-	  Sorting:
-	  <select name="sorting" id="sorting" onchange="layout()">
-		<option value="Forward">Forward</option>
-		<option value="Reverse">Reverse</option>
-		<option value="Ascending" selected="selected">Ascending</option>
-		<option value="Descending">Descending</option>
-	  </select>
-	</span>
-  </div>
-  <div id="myDiagram" style="background-color: white; border: solid 1px black; width: 1000px; height: 250px"></div>
+  <div id="myDiagram" style="background-color: white; border: solid 0px black; width: 500px; height: 250px"></div>
 </div>
 </body>
 </html> 
