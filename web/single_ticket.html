@@ -28,18 +28,20 @@
 	<div ng-controller="MainController">
 		<style>
 			table, th , td  {
-			  	border: 0px solid black;
+			  	border: 2px solid black;
 			  	padding: 15px;
     			border-radius: 10px;
     			-moz-border-radius: 15px;
 			}
 			table tr:nth-child(odd)	{
-			  background-color: #333333;
-			  color: white;
+			  background-color: #ffffff;
+			  color: black;
+			  font-size: 16pt;
 			}
 			table tr:nth-child(even) {
-			  background-color: #222222;
-			  color: white;
+			  background-color: #ffffff;
+			  color: black;
+			  font-size: 16pt;
 			}
 
 		</style>
@@ -51,9 +53,14 @@
 				</thead>
 			</table>
 
-			<table class="table" style="background-color: #666666; border: 0px; border-radius: 0px">
+
+			<button class="btn btn-primary form-control" style="margin:0px" ng-click="load_ticket()">
+				<i class="fa" style="font-size: 14pt;"> Print Ticket</i>
+			</button>
+
+			<table class="table" style="background-color: #ffffff; border: 0px; border-radius: 0px">
 			<thead>
-			<tr style="background-color: #666666">
+			<tr style="background-color: #ffffff">
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th><img src=".\images\depart_plane.png" alt="depart" height="24" width="24"> Depart City</th>
@@ -65,23 +72,17 @@
 			</thead>
 
 			<tbody>
-			<tr ng-repeat="row in tickets">
-				<th>{{row.firstname}}</th>
-				<th>{{row.lastname}}</th>
-				<th>{{row.flightid}}</th>
-				<th>{{row.departcity}}</th>
-				<th>{{row.arrivecity}}</th>
-				<th>{{row.flightdate}}</th>
-
-				<th>
-					<button class="btn btn-primary form-control" style="margin:0px" ng-click="load_ticket()">
-						<i class="fa"></i> More Info
-					</button>
-				</th>
-
+				<th>{{tickets[0].firstname}}</th>
+				<th>{{tickets[0].lastname}}</th>
+				<th>{{tickets[0].flightid}}</th>
+				<th>{{tickets[0].departcity}}</th>
+				<th>{{tickets[0].arrivecity}}</th>
+				<th>{{tickets[0].flightdate}}</th>
+				<th><img src="./images/qr_code.png" alt="QR" height="128" width="128"></th>
 			</tr>
 			</tbody>
 			</table>
+
 	</script>
 	
 	<script>
@@ -93,7 +94,26 @@
 		// I designed the backend to play nicely with angularjs so this is all the
 		// setup we need to do all of the ususal operations.
 		var Ticket = $resource("/tickets/:id", {id: '@id'}, {});
-		
+		var TicketID = $resource("/selected_ticket_id", {}, {});
+
+	    //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+	    $scope.displayedCollection = [].concat($scope.rowCollection);
+
+	    //add to the real data holder
+	    $scope.addRandomItem = function addRandomItem() {
+	    	console.log("Random");
+	        $scope.rowCollection.push(generateRandomItem(id));
+	        id++;
+	    };
+
+	    //remove to the real data holder
+	    $scope.removeItem = function removeItem(row) {
+	        var index = $scope.rowCollection.indexOf(row);
+	        if (index !== -1) {
+	            $scope.rowCollection.splice(index, 1);
+	        }
+	    }
+
 	    $scope.showtooltip = false;
 			$scope.selected = null;
 
@@ -129,11 +149,6 @@
 				$scope.selected.idx = idx;
 			});
 		};
-
-		$scope.load_ticket = function(){
-		    window.location.href = "./single_ticket.html";
-		}
-
 
 		$scope.add = function() {
 			var firstname = firstnames[Math.floor(Math.random() * 3)];

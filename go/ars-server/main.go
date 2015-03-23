@@ -21,13 +21,18 @@ type handlerError struct {
 
 // ticket model
 type ticket struct {
-	Passenger string `json:"passenger"`
-	Flight    string `json:"flight"`
+	FirstName string `json:"firstname"`
+	LastName string `json:"lastname"`
+	SourceCity  string `json:"arrivecity"`
+	DepartCity  string `json:"departcity"`
+	FlightID  string `json:"flightid"`
+	FlightDate string `json:"flightdate"`
 	Id        int    `json:"id"`
 }
 
 // list of all of the tickets
 var tickets = make([]ticket, 0)
+var int selected_ticket_id = 0;
 
 // a custom type that we can use for handling errors and formatting responses
 type handler func(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError)
@@ -66,6 +71,10 @@ func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func listTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
 	return tickets, nil
+}
+
+func getTicketID(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
+	return selected_ticket_id;
 }
 
 func getTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
@@ -177,6 +186,7 @@ func main() {
 	router.Handle("/", http.RedirectHandler("/static/", 302))
 	router.Handle("/tickets", handler(listTickets)).Methods("GET")
 	router.Handle("/tickets", handler(addTicket)).Methods("POST")
+	router.Handle("/selected_ticket_id", handler(getTicketID)).Methods("GET")
 	router.Handle("/tickets/{id}", handler(getTickets)).Methods("GET")
 	router.Handle("/tickets/{id}", handler(updateTicket)).Methods("POST")
 	router.Handle("/tickets/{id}", handler(removeTicket)).Methods("DELETE")
@@ -184,11 +194,9 @@ func main() {
 	http.Handle("/", router)
 
 	// bootstrap some data
-	tickets = append(tickets, ticket{"Nathan Acosta", "NMA460", getNextId()})
-	tickets = append(tickets, ticket{"Colby Gutierrez-Kraybill", "NMA361", getNextId()})
-	tickets = append(tickets, ticket{"Robert Herbertson", "NMA351", getNextId()})
-	tickets = append(tickets, ticket{"Max Larson", "NMA362", getNextId()})
-	tickets = append(tickets, ticket{"Martin Lidy", "NMA357", getNextId()})
+	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4601", "12/4/2015", getNextId()})
+	tickets = append(tickets, ticket{"Nathan", "Acosta", "Dallas, TX", "Albuquerque, NM", "NMA4603", "12/5/2015", getNextId()})
+	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4602", "12/8/2015", getNextId()})
 
 	log.Printf("Running on port %d\n", *port)
 
