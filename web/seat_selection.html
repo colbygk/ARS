@@ -16,8 +16,8 @@
 				allowMove: false,
 				allowGroup: false,
 				allowSelect: false,
-				//allowHorizontalScroll: false,
-				//allowVerticalScroll: false,
+				allowHorizontalScroll: false,
+				allowVerticalScroll: false,
 				//contentAlignment: go.Spot.Center,
 				/*layout: 
 					$(go.GridLayout,
@@ -27,18 +27,18 @@
 			
 		// define the Node template
 		myDiagram.nodeTemplate =
-			$(go.Part, //"Spot",
+			$(go.Part, "Spot",
 			{ 
 				// make sure the Node.location is different from the Node.position
-				//locationSpot: go.Spot.Center,
+				locationSpot: go.Spot.Center,
 				locationObjectName: "SHAPE",
-				click: showArrowInfo,
+				click: onClickSeat,
 				toolTip:
-				$(go.Adornment, "Auto",
-				$(go.Shape, { fill: "#EFEFCC" }),
-				$(go.TextBlock, { margin: 4 },
-					new go.Binding("text", "text"))
-				),
+					$(go.Adornment, "Auto",
+					$(go.Shape, { fill: "#EFEFCC" }),
+					$(go.TextBlock, { margin: 4 },
+						new go.Binding("text", "text"))
+					),
 			},
 			new go.Binding("location", "loc", go.Point.parse), 
 			new go.Binding("text", "text"),  // for sorting
@@ -49,7 +49,6 @@
 				stroke: "black",
 				desiredSize: new go.Size(25, 25),
 				minSize: new go.Size(25, 25),
-				//position: new go.Point(10,0)
 			},
 			new go.Binding("fill", "fill"),
 			//new go.Binding("oldFill", "oldFill"),
@@ -65,7 +64,7 @@
 		//updateDiagramSize(35, new go.Size(1, 1));
 	}
 	  
-	function showArrowInfo(e, obj) {
+	function onClickSeat(e, obj) {
 		var data = myDiagram.model.findNodeDataForKey(obj.part.text);
 		var newFill = data.fill === data.oldFill ? "#33B5E5" : data.oldFill;
 		myDiagram.model.setDataProperty(data, "fill", newFill);
@@ -94,7 +93,7 @@
 				key: i,
 				text: i.toString(),
 				fill: brushColor,
-				oldFill: brushColor	,
+				oldFill: brushColor,
 				loc: i.toString() + " " + i.toString()
 			});	  
 		}
