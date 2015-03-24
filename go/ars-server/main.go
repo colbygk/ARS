@@ -28,11 +28,13 @@ type ticket struct {
 	FlightID  string `json:"flightid"`
 	FlightDate string `json:"flightdate"`
 	Id        int    `json:"id"`
+	BackgroundArrive string `json:"backgroundarrive"`
+	BackgroundDepart string `json:"backgrounddepart"`
 }
 
 // list of all of the tickets
 var tickets = make([]ticket, 0)
-var int selected_ticket_id = 0;
+var selected_ticket_id = 0;
 
 // a custom type that we can use for handling errors and formatting responses
 type handler func(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError)
@@ -74,7 +76,7 @@ func listTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerE
 }
 
 func getTicketID(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
-	return selected_ticket_id;
+	return selected_ticket_id, nil;
 }
 
 func getTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
@@ -194,9 +196,9 @@ func main() {
 	http.Handle("/", router)
 
 	// bootstrap some data
-	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4601", "12/4/2015", getNextId()})
-	tickets = append(tickets, ticket{"Nathan", "Acosta", "Dallas, TX", "Albuquerque, NM", "NMA4603", "12/5/2015", getNextId()})
-	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4602", "12/8/2015", getNextId()})
+	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4601", "12/4/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
+	tickets = append(tickets, ticket{"Nathan", "Acosta", "Dallas, TX", "Albuquerque, NM", "NMA4603", "12/5/2015", getNextId(), "./images/dal_flight_img.png", "./images/alb_flight_img.png"})
+	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4602", "12/8/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
 
 	log.Printf("Running on port %d\n", *port)
 

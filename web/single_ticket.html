@@ -20,12 +20,13 @@
 <body>
 	<div class="jumbotron">
 		<h1>NM Air</h1>
+
 		<button class="btn btn-danger pull-right" ng-click="remove(selected.idx)">
 			<i class="fa"></i> <img style="margin:0px" src="./images/ic_action_gplus_old.png" alt="QR" height="28" width="28"> Sign-in with Google+ 
 		</button>
 	</div>
 
-	<div ng-controller="MainController">
+	<div ng-controller="MainController" style="vertical-align: bottom">
 		<style>
 			table, th , td  {
 			  	border: 2px solid black;
@@ -63,9 +64,9 @@
 			<tr style="background-color: #ffffff">
 				<th>First Name</th>
 				<th>Last Name</th>
+				<th>FlightID</th>
 				<th><img src=".\images\depart_plane.png" alt="depart" height="24" width="24"> Depart City</th>
 				<th><img src=".\images\arrive_plane.png" alt="arriving" height="24" width="24">Destination City</th>
-				<th>FlightID</th>
 				<th>Flight Date</th>
 				<th></th>
 			</tr>
@@ -75,7 +76,7 @@
 				<th>{{tickets[0].firstname}}</th>
 				<th>{{tickets[0].lastname}}</th>
 				<th>{{tickets[0].flightid}}</th>
-				<th>{{tickets[0].departcity}}</th>
+				<th>{{tickets[0].departcity}} </th>
 				<th>{{tickets[0].arrivecity}}</th>
 				<th>{{tickets[0].flightdate}}</th>
 				<th><img src="./images/qr_code.png" alt="QR" height="128" width="128"></th>

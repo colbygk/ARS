@@ -56,9 +56,9 @@
 			<tr style="background-color: #666666">
 				<th>First Name</th>
 				<th>Last Name</th>
+				<th>FlightID</th>
 				<th><img src=".\images\depart_plane.png" alt="depart" height="24" width="24"> Depart City</th>
 				<th><img src=".\images\arrive_plane.png" alt="arriving" height="24" width="24">Destination City</th>
-				<th>FlightID</th>
 				<th>Flight Date</th>
 				<th></th>
 			</tr>
@@ -69,12 +69,12 @@
 				<th>{{row.firstname}}</th>
 				<th>{{row.lastname}}</th>
 				<th>{{row.flightid}}</th>
-				<th>{{row.departcity}}</th>
-				<th>{{row.arrivecity}}</th>
+				<th background={{row.backgrounddepart}} style="color: black; font-size: 15px;">{{row.departcity}}</th>
+				<th background={{row.backgroundarrive}} style="color: black; font-size: 15px;">{{row.arrivecity}}</th>
 				<th>{{row.flightdate}}</th>
 
 				<th>
-					<button class="btn btn-primary form-control" style="margin:0px" ng-click="load_ticket()">
+					<button class="btn btn-primary form-control" style="margin:0px" ng-click="load_ticket(row.idx)">
 						<i class="fa"></i> More Info
 					</button>
 				</th>
@@ -85,6 +85,7 @@
 	</script>
 	
 	<script>
+
 	// new dependency: ngResource is included just above
 	var myapp = new angular.module("myapp", ["ngResource"]);
 
@@ -93,9 +94,10 @@
 		// I designed the backend to play nicely with angularjs so this is all the
 		// setup we need to do all of the ususal operations.
 		var Ticket = $resource("/tickets/:id", {id: '@id'}, {});
-		
+
+		$scope.selected_ticket_id = 0;
 	    $scope.showtooltip = false;
-			$scope.selected = null;
+		$scope.selected = null;
 
 	    $scope.hideToolTip = function(){
 	      $scope.showtooltip = false;
@@ -130,8 +132,9 @@
 			});
 		};
 
-		$scope.load_ticket = function(){
+		$scope.load_ticket = function(idx){
 		    window.location.href = "./single_ticket.html";
+		    $scope.selected_ticket_id = idx;
 		}
 
 
