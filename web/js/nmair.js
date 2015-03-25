@@ -9,6 +9,7 @@
 
 
 function initSeating() {
+    console.log("initSeating");
 		var $ = go.GraphObject.make;  // for conciseness in defining templates
 		
 		seatingDiagram =
@@ -54,6 +55,7 @@ function initSeating() {
 }
 	  
 function onClickShape(e, obj) {
+    console.log("onClickShape");
 		var data = seatingDiagram.model.findNodeDataForKey(obj.part.text);
 		var newFill = data.fill === data.oldFill ? "#33B5E5" : data.oldFill;
 		seatingDiagram.model.setDataProperty(data, "fill", newFill);
@@ -63,6 +65,7 @@ function onClickShape(e, obj) {
 	 
 	// @param layoutMode  0 == mode 1, else mode 2
 function generateLayout(layoutMode) {
+    console.log("generateLayout");
 		var itemCount;
 		var blankRows = new go.List("number");
 		if (layoutMode === 0) { 
@@ -113,6 +116,7 @@ function generateLayout(layoutMode) {
 }
 	  
 function resizeDiv(rows, paddedItemSize, columnWrap) {
+    console.log("resizeDiv");
 		seatingDiagram.startTransaction("resize div");
 		
 		var div = seatingDiagram.div;
@@ -139,6 +143,6 @@ window.onload = function () {
       });
    // $('#depicker').data("DateTimePicker").minDate(moment());
    // $('#repicker').data("DateTimePicker").minDate(moment());
-    initSeating();
+    //initSeating();
 }
 

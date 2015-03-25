@@ -24,11 +24,48 @@
     <!--link rel="stylesheet"
       href="/static/css/ticketing.css"-->
     <script>
-      angular.module('nma', ['ngAnimate'])
-        .controller('TripSelection', ['$scope', function($scope) {
+      var app = angular.module('nma', ['ngAnimate']);
+      
+      app.controller('TripSelection', ['$scope', function($scope) {
             $scope.items = ['flight', 'seat', 'other'];
             $scope.selection = $scope.items[1];
+            $scope.afterShow = function() {
+  //            window.alert('Fully shown');
+              initSeating();
+            }
+
+            $scope.afterHide = function() {
+   //           window.alert('Fully hidden');
+            }
             }]);
+
+app.directive('myShow', function($animate) {
+  return {
+    scope: {
+      'myShow': '=',
+      'afterShow': '&',
+      'afterHide': '&'
+    },
+    link: function(scope, element) {
+      scope.$watch('myShow', function(show, oldShow) {
+        if (!show) {
+          $animate.removeClass(element, 'ng-hide').then(scope.afterShow);
+        }
+        if (show) {
+          $animate.addClass(element, 'ng-hide').then(scope.afterHide);
+        }
+      });
+    }
+  }
+});
+
+      
+    function delayinit(v) {
+      if ( v == 1 )
+        show = true;
+      else
+        show = false;
+    };
     </script>
 
   </head>
@@ -39,7 +76,7 @@
         <h1>NM Air</h1>
         <h2>Plan Your Trip Now</h2>
         <div id="switcher">
-          <select ng-model="selection" ng-options="item for item in items">
+          <select ng-model="selection" onchange="delayinit(this.value)" ng-options="item for item in items">
           </select>
         </div>
       </div> <!-- Jumbotron container -->
@@ -85,8 +122,8 @@
                   </div> <!-- col-sm-6 col-md-6 -->
                 </div> <!-- row -->
               </div> <!-- flight selection -->
-              <div class="animate-switch" ng-switch-when="seat">
-               <div class="seating" id="seatingDiagram"></div>
+              <div class="animate-switch" ng-switch-when="seat" my-show="show" after-show="afterShow()" after-hide="afterHide()">
+               <div class="seating" id="seatingDiagram" ></div>
               </div>
               <div class="animate-switch" ng-switch-default>
               </div>
