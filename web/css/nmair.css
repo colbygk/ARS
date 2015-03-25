@@ -5,4 +5,38 @@ body {
 
 .jumbotron {
   background: orange!important;
-};
+}
+
+
+.animate-switch-container {
+position:relative;
+color:white;
+background:black;
+border:1px solid darkorange;
+height:40em;
+overflow:hidden;
+}
+
+.animate-switch {
+padding:10px;
+}
+
+.animate-switch.ng-animate {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.10s;
+transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.10s;
+
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+}
+
+.animate-switch.ng-leave.ng-leave-active,
+  .animate-switch.ng-enter {
+top:-5em;
+  }
+.animate-switch.ng-leave,
+  .animate-switch.ng-enter.ng-enter-active {
+top:0;
+  }
