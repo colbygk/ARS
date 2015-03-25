@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+
+  <head>
+    <meta charset="UTF-8">
+    <title>NM Air</title>
+
+
+    <script src="js/go-debug.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+
+    <link rel="stylesheet" href="css/nmair.css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>
+    <script src="js/nmair.js"></script>
+
+    <!--link rel="stylesheet"
+      href="/static/css/ticketing.css"-->
+    <script>
+      angular.module('nma', ['ngAnimate'])
+        .controller('TripSelection', ['$scope', function($scope) {
+            $scope.items = ['flight', 'seat', 'other'];
+            $scope.selection = $scope.items[1];
+            }]);
+    </script>
+
+  </head>
+
+  <body ng-app="nma">
+    <div class="container" ng-controller="TripSelection">
+      <div class="jumbotron container">
+        <h1>NM Air</h1>
+        <h2>Plan Your Trip Now</h2>
+        <div id="switcher">
+          <select ng-model="selection" ng-options="item for item in items">
+          </select>
+        </div>
+      </div> <!-- Jumbotron container -->
+          <div class="animate-switch-container"
+            ng-switch on="selection">
+              <div class="animate-switch" ng-switch-when="flight">
+                <div class="row">
+                  <div class='col-sm-6 col-md-6'>
+                    <div class="form-group">
+                      <div class='input-group date' id='depicker'>
+                        <input type='text' class="form-control" placeholder="Departure" />
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                      </div>
+                      <div class='input-group input-xxlg' id='airport1'>
+                        <select class="form-control">
+                          <option value="abq">ABQ (Albuquerque NM, Sunport)</option>
+                          <option value="bos">BOS (Boston MA, Logan)</option>
+                          <option value="ord">ORD (Chicago IL, O'Hare</option>
+                          <option value="lax">LAX (Los Angeles CA, International)</option>
+                        </select>
+                      </div> <!-- airport1 -->
+                    </div> <!-- form-group -->
+                  </div> <!-- col-sm-6 col-md-6 -->
+                  <div class='col-sm-6 col-md-6'>
+                    <div class="form-group">
+                      <div class='input-group date' id='repicker'>
+                        <input type='text' class="form-control" placeholder="Return"/>
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                      </div>
+                      <div class='input-group input-xxlg' id='airport2'>
+                        <select class="form-control">
+                          <option value="abq">ABQ (Albuquerque NM, Sunport)</option>
+                          <option value="bos">BOS (Boston MA, Logan)</option>
+                          <option value="ord">ORD (Chicago IL, O'Hare</option>
+                          <option value="lax">LAX (Los Angeles CA, International)</option>
+                        </select>
+                      </div> <!-- airport2 -->
+                    </div> <!-- form-group -->
+                  </div> <!-- col-sm-6 col-md-6 -->
+                </div> <!-- row -->
+              </div> <!-- flight selection -->
+              <div class="animate-switch" ng-switch-when="seat">
+               <div class="seating" id="seatingDiagram"></div>
+              </div>
+              <div class="animate-switch" ng-switch-default>
+              </div>
+          </div>
+
+         <script>
+            // new dependency: ngResource is included just above
+            //        var nma = new angular.module("nma", ["ngResource"]);
+  
+            // inject the $resource dependency here
+            //  nma.controller("TripSelection", ["$scope", "$resource", function($scope, $resource){
+            // I designed the backend to play nicely with angularjs so this is all the
+            // setup we need to do all of the ususal operations.
+            //  var Ticket = $resource("/trip/:id", {id: '@id'}, {}); }
+            //  }
+         </script>
+
+    </div> <!-- container -->
+  </body>
+</html>
+
