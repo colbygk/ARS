@@ -11,8 +11,8 @@
 function initSeating() {
 		var $ = go.GraphObject.make;  // for conciseness in defining templates
 		
-		myDiagram =
-			$(go.Diagram, "myDiagram",  // must be the ID or reference to div
+		seatingDiagram =
+			$(go.Diagram, "seatingDiagram",  // must be the ID or reference to div
 			{
 				autoScale: go.Diagram.Uniform,
 				allowMove: false,
@@ -23,7 +23,7 @@ function initSeating() {
 			});
 			
 		// define the Node template
-		myDiagram.nodeTemplate =
+		seatingDiagram.nodeTemplate =
 			$(go.Part, "Spot",
 			{ 
 				click: onClickShape,
@@ -54,9 +54,9 @@ function initSeating() {
 }
 	  
 function onClickShape(e, obj) {
-		var data = myDiagram.model.findNodeDataForKey(obj.part.text);
+		var data = seatingDiagram.model.findNodeDataForKey(obj.part.text);
 		var newFill = data.fill === data.oldFill ? "#33B5E5" : data.oldFill;
-		myDiagram.model.setDataProperty(data, "fill", newFill);
+		seatingDiagram.model.setDataProperty(data, "fill", newFill);
 		
 		//window.alert("Clicked seat: " + obj.part.text + "\n" + data.fill);
 }
@@ -106,24 +106,24 @@ function generateLayout(layoutMode) {
 		}
 
 		// create a Model that does not know about link or group relationships
-		myDiagram.model = new go.Model(nodeDataArray);
+		seatingDiagram.model = new go.Model(nodeDataArray);
 		
 		// resize the div
 		resizeDiv(++row, paddedItemSize, columnWrap);
 }
 	  
 function resizeDiv(rows, paddedItemSize, columnWrap) {
-		myDiagram.startTransaction("resize div");
+		seatingDiagram.startTransaction("resize div");
 		
-		var div = myDiagram.div;
-		var newHeight = (rows * paddedItemSize) + (2 * myDiagram.padding.top);
-		var newWidth = (paddedItemSize * columnWrap) + (2 * myDiagram.padding.left);
+		var div = seatingDiagram.div;
+		var newHeight = (rows * paddedItemSize) + (2 * seatingDiagram.padding.top);
+		var newWidth = (paddedItemSize * columnWrap) + (2 * seatingDiagram.padding.left);
 
 		div.style.width = newWidth.toString() + "px";
 		div.style.height = newHeight.toString() + "px";
-		myDiagram.requestUpdate();
+		seatingDiagram.requestUpdate();
 
-		myDiagram.commitTransaction("resize div");
+		seatingDiagram.commitTransaction("resize div");
 }
 	  
 
@@ -139,5 +139,6 @@ window.onload = function () {
       });
    // $('#depicker').data("DateTimePicker").minDate(moment());
    // $('#repicker').data("DateTimePicker").minDate(moment());
+    initSeating();
 }
 

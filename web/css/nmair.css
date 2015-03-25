@@ -34,9 +34,17 @@ bottom:0;
 
 .animate-switch.ng-leave.ng-leave-active,
   .animate-switch.ng-enter {
-top:-5em;
+top:-40em;
   }
 .animate-switch.ng-leave,
   .animate-switch.ng-enter.ng-enter-active {
 top:0;
   }
+
+.seating {
+  background: white;
+  border: solid 1px orange;
+  width: 500px;
+height: 250px;
+}
+
