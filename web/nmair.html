@@ -31,7 +31,8 @@
             $scope.selection = $scope.items[1];
             $scope.afterShow = function() {
   //            window.alert('Fully shown');
-              initSeating();
+			  initSeating();
+              generateLayout(0);
             }
 
             $scope.afterHide = function() {
