@@ -142,7 +142,7 @@
 <div ng-controller="paymentController as paymentCtrl">
   <div class="row">
   <div class='col-sm-6 col-md-6'>
-    <div class="form-group">
+    <div class="form-group ">
 
 	  <p>* Indicates Required</p>
 	  <br>
@@ -150,23 +150,24 @@
 		  <table>
 			  <tr><td>Customer Information</td></tr>
 			  <tr><td> Name *</td>
-				  <td> <input type="text" ng-model="paymentCtrl.custAddrInfo.name" required/> </td></tr>
+				  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.custAddrInfo.name" required/> </td></tr>
 			  <tr><td> Address 1 *</td>
-				  <td> <input type="text" ng-model="paymentCtrl.custAddrInfo.address1" required/> </td></tr>
+				  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.custAddrInfo.address1" required/> </td></tr>
 			  <tr><td> Address 2 </td>
-				  <td> <input type="text" ng-model="paymentCtrl.custAddrInfo.address2" required/> </td></tr>
+				  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.custAddrInfo.address2" /> </td></tr>
 			  <tr>
 				  <td> City *</td>
-				  <td> <input type="text" ng-model="paymentCtrl.custAddrInfo.city" required/> </td></tr>
+				  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.custAddrInfo.city" required/> </td></tr>
 			  <tr><td> State *</td>
-				  <td> <input type="text" ng-model="paymentCtrl.custAddrInfo.state" required> </td></tr>
+				  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.custAddrInfo.state" required> </td></tr>
 		 	  <tr><td> Zip *</td>
-				  <td> <input type="number" ng-model="paymentCtrl.custAddrInfo.zip" required/> </td></tr>
+				  <td> <input id="payInfo" type="number" ng-model="paymentCtrl.custAddrInfo.zip" required/> </td></tr>
 			  <tr><td> Country *</td>
-				  <td> <select ng-model="paymentCtrl.custAddrInfo.country" required>
+				  <td> <select id="payInfo" ng-model="paymentCtrl.custAddrInfo.country" required>
 						  <option>United States</option>
 						  <option>Pandora</option>
 					   </select> </td></tr>
+			  <tr><td style="color: black"> . </td></tr>
 			  
     </div> <!-- form-group -->
   </div> <!-- col-sm-6 col-md-6 -->
@@ -175,21 +176,20 @@
 			  <tr><td>Payment Information</td></tr>
 			  
 			  <tr><td> Card Type *  </td>
-				  <td> <select ng-model="paymentCtrl.paymentInfo.cardType" required>
+				  <td> <select id="payInfo" ng-model="paymentCtrl.paymentInfo.cardType" required>
 							  <option>Visa</option>
 							  <option>MasterCard</option>
 							  <option>Discover</option>
 							  <option>American Express</option>
-							  <option>Picard</option>
 					   </select> </td></tr>
 			  <tr><td> Name on Card * </td>
-				  <td> <input type="text" ng-model="paymentCtrl.paymentInfo.nameOnCard" required/> </td></tr>
+				  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.paymentInfo.nameOnCard" required/> </td></tr>
 			  <tr><td> Card Number * </td>
-				  <td> <input type="number" ng-model="paymentCtrl.paymentInfo.cardNumber" required/> </td></tr>
+				  <td> <input id="payInfo" type="number" ng-model="paymentCtrl.paymentInfo.cardNumber" required/> </td></tr>
 			  <tr><td> Expiration Date * </td>
-				  <td> <input type="month" ng-model="paymentCtrl.paymentInfo.expireDate" required/> </td></tr>
+				  <td> <input id="payInfo" type="month" ng-model="paymentCtrl.paymentInfo.expireDate" required/> </td></tr>
 			  <tr><td> CVV * </td>
-				  <td> <input type="number" ng-model="paymentCtrl.paymentInfo.cvv" required/> </td></tr>
+				  <td> <input id="payInfo" type="number" ng-model="paymentCtrl.paymentInfo.cvv" required/> </td></tr>
 		  </table>
     </div> <!-- form-group -->
   </div> <!-- col-sm-6 col-md-6 -->
@@ -202,17 +202,17 @@
 			  <table>
 				  <tr><td> Billing Address</td></tr>
 				  <tr><td> Address 1 *</td>
-					  <td> <input type="text" ng-model="paymentCtrl.billAddrInfo.address1" required/> </td></tr>
+					  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.billAddrInfo.address1" required/> </td></tr>
 				  <tr><td> Address 2 </td>
-					  <td> <input type="text" ng-model="paymentCtrl.billAddrInfo.address2" required/> </td></tr>
+					  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.billAddrInfo.address2" /> </td></tr>
 				  <tr><td> City *</td>
-					  <td> <input type="text" ng-model="paymentCtrl.billAddrInfo.city" required/> </td></tr>
+					  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.billAddrInfo.city" required/> </td></tr>
 				  <tr><td> State *</td>
-					  <td> <input type="text" ng-model="paymentCtrl.billAddrInfo.state" required> </td></tr>
+					  <td> <input id="payInfo" type="text" ng-model="paymentCtrl.billAddrInfo.state" required> </td></tr>
 				  <tr><td> Zip *</td>
-					  <td> <input type="number" ng-model="paymentCtrl.billAddrInfo.zip" required/> </td></tr>
+					  <td> <input id="payInfo" type="number" ng-model="paymentCtrl.billAddrInfo.zip" required/> </td></tr>
 				  <tr><td> Country *</td>
-					  <td> <select ng-model="paymentCtrl.billAddrInfo.country" required>
+					  <td> <select id="payInfo" ng-model="paymentCtrl.billAddrInfo.country" required>
 							  <option>United States</option>
 							  <option>Pandora</option>
 						   </select> </td></tr>
