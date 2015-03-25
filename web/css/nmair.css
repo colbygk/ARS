@@ -10,10 +10,11 @@ body {
 
 .animate-switch-container {
 position:relative;
-color:white;
+color:black;
 background:black;
-border:1px solid darkorange;
-height:40em;
+border:0px solid darkorange;
+margin: 0em 0em 0em 2em;
+height:90em;
 overflow:hidden;
 }
 
@@ -48,3 +49,6 @@ top:0;
 height: 250px;
 }
 
+input {
+color: black;
+}
