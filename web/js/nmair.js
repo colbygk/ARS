@@ -110,7 +110,7 @@ function generateLayout(layoutMode) {
 
 		// create a Model that does not know about link or group relationships
 		seatingDiagram.model = new go.Model(nodeDataArray);
-		
+		seatingDiagram.animationManager.isEnabled = false;
 		// resize the div
 		resizeDiv(++row, paddedItemSize, columnWrap);
 }
