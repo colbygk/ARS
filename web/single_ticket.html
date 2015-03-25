@@ -31,6 +31,8 @@
 			table, th , td  {
 			  	border: 2px solid black;
 			  	padding: 15px;
+    			border-radius: 10px;
+    			-moz-border-radius: 15px;
 			}
 			table tr:nth-child(odd)	{
 			  background-color: #ffffff;
@@ -59,16 +61,7 @@
 
 			<table class="table" style="background-color: #ffffff; border: 0px; border-radius: 0px">
 			<thead>
-			<tr style="background-color: #888888">
-				<th>NM Air Ticket</th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-			</tr>
-			<tr style="background-color: #BBBBBB">
+			<tr style="background-color: #ffffff">
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th>FlightID</th>
@@ -87,22 +80,6 @@
 				<th>{{tickets[0].arrivecity}}</th>
 				<th>{{tickets[0].flightdate}}</th>
 				<th><img src="./images/qr_code.png" alt="QR" height="128" width="128"></th>
-			</tr>
-
-			<tbody>
-				<th>Gate: B3</th>
-				<th>Seat: A17</th>
-				<th></th>
-				<th>(ALB)</th>
-				<th>(DAL)</th>
-			</tr>
-
-			<tbody>
-				<th>Flight Policy:</th>
-			</tr>
-
-			<tr style="background-color: #BBBBBB">
-				<th style="font-size:12px;">ID: 1012457987574272</th>
 			</tr>
 			</tbody>
 			</table>
