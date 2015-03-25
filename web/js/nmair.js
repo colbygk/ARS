@@ -35,6 +35,7 @@ function initSeating() {
 						new go.Binding("text", "label"))
 					),
 			},
+			new go.Binding("click", "click"),
 			new go.Binding("location", "locPoint"),
 			new go.Binding("text", "text"),  // for sorting, apparently more...
 			$(go.Shape, "Card",
@@ -127,7 +128,7 @@ function generateLayout(layoutMode) {
 					
 			nodeDataArray.push({
 				key:  (itemCount + i + 1),
-				text:  (itemCount + i + 1).toString,
+				text:  (itemCount + i + 1).toString(),
 				label: (i + 1).toString(),
 				fill: null,
 				stroke: "black",
