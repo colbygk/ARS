@@ -28,11 +28,12 @@
       
       app.controller('TripSelection', ['$scope', function($scope) {
             $scope.items = ['flight', 'seat', 'payment','ticket'];
-            $scope.selection = $scope.items[0];
+            $scope.selection = $scope.items[1];
+			$scope.seatLayout = 0;
             $scope.afterShow = function() {
   //            window.alert('Fully shown');
               initSeating();
-              // generateLayout(0);
+              generateLayout($scope.seatLayout);
             }
 
             $scope.afterHide = function() {
@@ -124,7 +125,7 @@
               </div> <!-- flight selection -->
               <div class="animate-switch" ng-switch-when="seat"
                    my-show="show" after-show="afterShow()" after-hide="afterHide()">
-               <div class="seating" id="seatingDiagram" ></div>
+               <div class="seating" id="seatingDiagram" style="background:#454545" ></div>
               </div>
               <div class="animate-switch" ng-switch-when="payment" style="color:white;">
                 
