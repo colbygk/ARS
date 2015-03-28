@@ -15,6 +15,7 @@ function initSeating() {
 		seatingDiagram =
 			$(go.Diagram, "seatingDiagram",  // must be the ID or reference to div
 			{
+				contentAlignment: go.Spot.Center,
 				autoScale: go.Diagram.Uniform,
 				allowMove: false,
 				allowGroup: false,
@@ -43,15 +44,17 @@ function initSeating() {
 				fill: "lightgray",
 				stroke: "black",
 				desiredSize: new go.Size(25, 25),
-				minSize: new go.Size(25, 25),
+				//minSize: new go.Size(10, 10),
 			},
 			new go.Binding("figure", "figure"),
 			new go.Binding("stroke", "stroke"),
 			new go.Binding("fill", "fill"),
 			new go.Binding("desiredSize", "size")),
 			$(go.TextBlock,
+				{ stroke: "white" },
 				// the default alignment is go.Spot.Center
-				new go.Binding("text", "label"))
+				new go.Binding("text", "label"),
+				new go.Binding("stroke", "textStroke"))
 			);
 		
 		generateLayout(0); // generate layout
@@ -68,7 +71,8 @@ function onClickShape(e, obj) {
 
 function greyOut(index) {
 		var data = seatingDiagram.model.findNodeDataForKey(index);
-		seatingDiagram.model.setDataProperty(data, "fill", "#C0C0C0");
+		seatingDiagram.model.setDataProperty(data, "fill", "#b0b0b0");
+		seatingDiagram.model.setDataProperty(data, "textStroke", "#d0d0d0");
 		seatingDiagram.model.setDataProperty(data, "click", null);
 		
 		//window.alert("Clicked seat: " + obj.part.text + "\n" + data.fill);
@@ -90,7 +94,7 @@ function generateLayout(layoutMode) {
 		
 		var colorIndex = 0;
 		var colorList = new go.List("string");
-		colorList.add("#EB6E44");
+		colorList.add("#266A2E");
 		colorList.add("#FFF5C3");
 		colorList.add("#8DCDC1");
 		
@@ -103,8 +107,8 @@ function generateLayout(layoutMode) {
 		
 		for (var i = 0; i < itemCount; i++) {
 			if (i % columnWrap === 0) { ++row; }
-			if (blankRows.contains(row)) { ++row; colorIndex = ++colorIndex % 3; }
-			//if (i % 20 === 0) { fill = null; }
+			if (blankRows.contains(row)) { ++row; }//colorIndex = ++colorIndex % 3; }
+			if (i % 20 === 0) { fill = null; }
 			
 			column = i % columnWrap;
 			locPoint = new go.Point((column * paddedItemSize), (row * paddedItemSize));
@@ -134,7 +138,8 @@ function generateLayout(layoutMode) {
 				stroke: "black",
 				figure: "Circle",
 				oldFill: colorList.get(colorIndex),
-				locPoint: locPoint
+				locPoint: locPoint,
+				click: null
 			});
 			
 			//console.log(i + ":  " + locPoint + "\n");
