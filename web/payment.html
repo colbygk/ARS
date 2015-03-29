@@ -1,154 +1,173 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<script src="http://code.angularjs.org/1.2.10/angular.min.js"></script>
-
-<meta charset="UTF-8">
-
-<style>
-    
-	.ng-invalid.ng-dirty {
-		border-color: red;
-	}
-	.ng-valid.ng-dirty {
-		border-color: green;
-	}
-</style>
-
-</head>
-
-<body>
-
-<div ng-app="paymentApp" ng-controller="paymentController as paymentCtrl">
-	<p>* Indicates Required</p>
-	<br>
+<form class="form-horizontal" role="form">
+	<div class="col-sm-12 col-md-12">
+		<div class="col-sm-12 col-md-12">
+			<div class="form-group col-sm-6"> <!--Customer Information-->
+				<div class="row">
+					<label class="row text-center col-sm-12" >Customer Information</label>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Name&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="Enter name here" ng-model="paymentCtrl.custAddrInfo.name" required/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Address&nbsp;1&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.address1" required/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Address&nbsp;2</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.address2"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >City&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.city"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >State&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.state"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Zip&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.zip"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Country&nbsp;*</label>
+					<div class="col-sm-8">
+					    <select class="form-control" ng-model="paymentCtrl.custAddrInfo.country" required>
+							  <option>United States</option>
+							  <option>Pandora</option>
+					   </select>
+					</div>
+				</div>
+			</div>
 		
-	<form>
-		<table>
-			<tr><td>Customer Information</td></tr>
-			<tr><td> Name *</td>
-				<td> <input type="text" ng-model="paymentCtrl.custAddrInfo.name" required/> </td></tr>
-			<tr><td> Address 1 *</td>
-				<td> <input type="text" ng-model="paymentCtrl.custAddrInfo.address1" required/> </td></tr>
-			<tr><td> Address 2 </td>
-				<td> <input type="text" ng-model="paymentCtrl.custAddrInfo.address2" required/> </td></tr>
-			<tr>
-				<td> City *</td>
-				<td> <input type="text" ng-model="paymentCtrl.custAddrInfo.city" required/> </td></tr>
-			<tr><td> State *</td>
-				<td> <input type="text" ng-model="paymentCtrl.custAddrInfo.state" required> </td></tr>
-		 	<tr><td> Zip *</td>
-				<td> <input type="number" ng-model="paymentCtrl.custAddrInfo.zip" required/> </td></tr>
-			<tr><td> Country *</td>
-				<td> <select ng-model="paymentCtrl.custAddrInfo.country" required>
-						<option>United States</option>
-						<option>Pandora</option>
-					 </select> </td></tr>
-			
-			<tr><td>Payment Information</td></tr>
-			
-			<tr><td> Card Type *  </td>
-				<td> <select ng-model="paymentCtrl.paymentInfo.cardType" required>
-							<option>Visa</option>
-							<option>MasterCard</option>
-							<option>Discover</option>
-							<option>American Express</option>
-							<option>Picard</option>
-					 </select> </td></tr>
-			<tr><td> Name on Card * </td>
-				<td> <input type="text" ng-model="paymentCtrl.paymentInfo.nameOnCard" required/> </td></tr>
-			<tr><td> Card Number * </td>
-				<td> <input type="number" ng-model="paymentCtrl.paymentInfo.cardNumber" required/> </td></tr>
-			<tr><td> Expiration Date * </td>
-				<td> <input type="month" ng-model="paymentCtrl.paymentInfo.expireDate" required/> </td></tr>
-			<tr><td> CVV * </td>
-				<td> <input type="number" ng-model="paymentCtrl.paymentInfo.cvv" required/> </td></tr>
-		</table>
-		<br>
-		<input type="checkbox" ng-model="paymentCtrl.sameInfo" ng-change="paymentCtrl.sameAddress()"> Billing address same as customer address. <br>
-		<br>
-		<div ng-hide="paymentCtrl.sameInfo">
-			<table>
-				<tr><td> Billing Address</td></tr>
-				<tr><td> Address 1 *</td>
-					<td> <input type="text" ng-model="paymentCtrl.billAddrInfo.address1" required/> </td></tr>
-				<tr><td> Address 2 </td>
-					<td> <input type="text" ng-model="paymentCtrl.billAddrInfo.address2" required/> </td></tr>
-				<tr><td> City *</td>
-					<td> <input type="text" ng-model="paymentCtrl.billAddrInfo.city" required/> </td></tr>
-				<tr><td> State *</td>
-					<td> <input type="text" ng-model="paymentCtrl.billAddrInfo.state" required> </td></tr>
-				<tr><td> Zip *</td>
-					<td> <input type="number" ng-model="paymentCtrl.billAddrInfo.zip" required/> </td></tr>
-				<tr><td> Country *</td>
-					<td> <select ng-model="paymentCtrl.billAddrInfo.country" required>
-							<option>United States</option>
-							<option>Pandora</option>
-						 </select> </td></tr>
-		 	</table>
+			<div class="form-group col-sm-6"> <!--Payment Information-->
+				<div class="row">
+					<label class="row text-center col-sm-12" >Payment&nbsp;Information</label>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Card&nbsp;Type&nbsp;*</label>
+					<div class="col-sm-8">
+					    <select class="form-control" ng-model="paymentCtrl.paymentInfo.cardType" required>
+								  <option>Visa</option>
+								  <option>MasterCard</option>
+								  <option>Discover</option>
+								  <option>American Express</option>
+					   </select>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Name&nbsp;on&nbsp;Card&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.paymentInfo.nameOnCard" required/> 
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Card&nbsp;Number&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.cardNumber"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Expiration&nbsp;Date&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.expireDate"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >CVV&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.custAddrInfo.cvv"/>
+					</div>
+				</div>
+			</div>
+		
 		</div>
-		<br>
-		<input type="submit"/> <br>
-	</form>
-	
-	<br>
-	<blockquote>
-		Card Type: {{paymentCtrl.paymentInfo.cardType}}<br>
-		Name on Card: {{paymentCtrl.paymentInfo.nameOnCard}}<br>
-		Card Number: {{paymentCtrl.paymentInfo.cardNumber}}<br>
-		Expiration Date: {{paymentCtrl.paymentInfo.expireDate}}<br>
-		CVV: {{paymentCtrl.paymentInfo.cvv}}<br>
-		<br>
-		Address 1: {{paymentCtrl.billAddrInfo.address1}}<br>
-		Address 2: {{paymentCtrl.billAddrInfo.address2}}<br>
-		City: {{paymentCtrl.billAddrInfo.city}}<br>
-		State: {{paymentCtrl.billAddrInfo.state}}<br>
-		Zip: {{paymentCtrl.billAddrInfo.zip}}<br>
-		Country: {{paymentCtrl.billAddrInfo.country}}<br>
-	</blockquote>
-
-</div>
-
-<script>
-	var app = angular.module("paymentApp", []);
-	
-	app.controller("paymentController", function () {
-		var paymentInfo = {
-			cardType: "",
-			nameOnCard: "",
-			cardNumber: "",
-			expireDate: "",
-			cvv: ""
-		};
-		var billAddrInfo = {
-			address1: "",
-			address2: "",
-			city: "",
-			state: "",
-			zip: "",
-			country: ""
-		};
-		var custAddrInfo = {
-			address1: "",
-			address2: "",
-			city: "",
-			state: "",
-			zip: "",
-			country: ""
-		};
 		
-		this.sameInfo = false;
-		this.sameAddress = function () {
-			this.billAddrInfo.address1 = this.custAddrInfo.address1;
-			this.billAddrInfo.address2 = this.custAddrInfo.address2;
-			this.billAddrInfo.city = this.custAddrInfo.city;
-			this.billAddrInfo.state = this.custAddrInfo.state;
-			this.billAddrInfo.zip = this.custAddrInfo.zip;
-			this.billAddrInfo.country = this.custAddrInfo.country;
-		};
-	});
-</script>
+		<div class="col-sm-12 col-md-12">
+				
+			<div class="form-group col-sm-6"> <!-- Billing Address -->
+				<div class="row">
+					<label class="row text-center col-sm-12" >Billing Address</label>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Address&nbsp;1&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.billAddrInfo.address1" required/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Address&nbsp;2</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.billAddrInfo.address2"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >City&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.billAddrInfo.city"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >State&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.billAddrInfo.state"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Zip&nbsp;*</label>
+					<div class="col-sm-8">
+					    <input type="text" class="form-control" placeholder="PLACEHOLDER" ng-model="paymentCtrl.billAddrInfo.zip"/>
+					</div>
+				</div>
+				<div class="row">
+					<label class="control-label col-sm-4" >Country&nbsp;*</label>
+					<div class="col-sm-8">
+					    <select class="form-control" ng-model="paymentCtrl.billAddrInfo.country" required>
+							  <option>United States</option>
+							  <option>Pandora</option>
+					   </select>
+					</div>
+				</div>
+			</div>
+		
+			<div class="col-sm-1"> </div>
+		
+			<div class="form-group col-sm-5"> <!-- Provided Information -->
+			    <table>
+					<tr><th>Card Type:</th><td>{{paymentCtrl.paymentInfo.cardType}}</td></tr>
+					<tr><th>Name on Card:</th><td>{{paymentCtrl.paymentInfo.nameOnCard}}</td></tr>
+					<tr><th>Card Number:</th><td>{{paymentCtrl.paymentInfo.cardNumber}}</td></tr>
+					<tr><th>Expiration Date:</th><td>{{paymentCtrl.paymentInfo.expireDate}}</td></tr>
+					<tr><th>CVV:</th><td>{{paymentCtrl.paymentInfo.cvv}}</td></tr>
+					<tr><th></th><td></td></tr>
+					<tr><th>Address 1:</th><td>{{paymentCtrl.custAddrInfo.address1}}</td></tr>
+					<tr><th>Address 2:</th><td>{{paymentCtrl.custAddrInfo.address2}}</td></tr>
+					<tr><th>City:</th><td>{{paymentCtrl.custAddrInfo.city}}</td></tr>
+					<tr><th>State:</th><td>{{paymentCtrl.custAddrInfo.state}}</td></tr>
+					<tr><th>Zip:</th><td>{{paymentCtrl.custAddrInfo.zip}}</td></tr>
+					<tr><th>Country:</th><td>{{paymentCtrl.custAddrInfo.country}}</td></tr>
+			    </table>
+		    </div>
+			
+		</div>
+</form>
 
-</body>
-</html>
+<div class="col-sm-12 col-md-12"> <!-- Pay Button -->
+	<div class="col-sm-4 col-md-4"> </div>
+		<div class="col-sm-4 col-md-4"> 
+			<input class="form-control" type="submit" value="Pay"/> <br>
+		</div>
+	<div class="col-sm-4 col-md-4"> </div>
+</div>
