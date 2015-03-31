@@ -8,12 +8,21 @@ body {
 }
 
 
+.seating {
+  background: #454545;
+}
+
+.sheet-control-container {
+  background: gray;
+  margin: 0em 2em 0em 2em;
+}
+
 .animate-switch-container {
 position:relative;
 color:black;
 background:black;
 border:0px solid darkorange;
-margin: 0em 0em 0em 2em;
+margin: 0em 0em 0em 0em;
 height:90em;
 overflow:hidden;
 }
@@ -58,3 +67,11 @@ color: black;
 	width:100%;
 	height:25px;
 }
+
+.ng-invalid.ng-dirty {
+  border-color: red;
+}
+.ng-valid.ng-dirty {
+  border-color: green;
+}
+

@@ -28,7 +28,7 @@
       
       app.controller('TripSelection', ['$scope', function($scope) {
             $scope.items = ['flight', 'seat', 'payment','ticket'];
-            $scope.selection = $scope.items[1];
+            $scope.selection = $scope.items[0];
 			$scope.seatLayout = 0;
             $scope.afterShow = function() {
   //            window.alert('Fully shown');
@@ -83,125 +83,83 @@
           </select>
         </div>
       </div> <!-- Jumbotron container -->
-          <div class="animate-switch-container"
-            ng-switch on="selection">
-              <div class="animate-switch" ng-switch-when="flight">
-                <div class="row">
-                  <div class='col-sm-6 col-md-6'>
-                    <div class="form-group">
-                      <div class='input-group date' id='depicker'>
-                        <input type='text' class="form-control" placeholder="Departure" />
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                      </div>
-                      <div class='input-group input-xxlg' id='airport1'>
-                        <select class="form-control">
-                          <option value="abq">ABQ (Albuquerque NM, Sunport)</option>
-                          <option value="bos">BOS (Boston MA, Logan)</option>
-                          <option value="ord">ORD (Chicago IL, O'Hare</option>
-                          <option value="lax">LAX (Los Angeles CA, International)</option>
-                        </select>
-                      </div> <!-- airport1 -->
-                    </div> <!-- form-group -->
-                  </div> <!-- col-sm-6 col-md-6 -->
-                  <div class='col-sm-6 col-md-6'>
-                    <div class="form-group">
-                      <div class='input-group date' id='repicker'>
-                        <input type='text' class="form-control" placeholder="Return"/>
-                        <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                      </div>
-                      <div class='input-group input-xxlg' id='airport2'>
-                        <select class="form-control">
-                          <option value="abq">ABQ (Albuquerque NM, Sunport)</option>
-                          <option value="bos">BOS (Boston MA, Logan)</option>
-                          <option value="ord">ORD (Chicago IL, O'Hare</option>
-                          <option value="lax">LAX (Los Angeles CA, International)</option>
-                        </select>
-                      </div> <!-- airport2 -->
-                    </div> <!-- form-group -->
-                  </div> <!-- col-sm-6 col-md-6 -->
-                </div> <!-- row -->
-              </div> <!-- flight selection -->
-              <div class="animate-switch" ng-switch-when="seat"
-                   my-show="show" after-show="afterShow()" after-hide="afterHide()">
-               <div class="seating" id="seatingDiagram" style="background:#454545" ></div>
+      <div class="sheet-control-container">
+        <div class="row">  
+        <div class="col-10">  
+        <div class="animate-switch-container"
+             ng-switch on="selection">
+          <div class="animate-switch" ng-switch-when="flight">
+            <div class="row">
+              <div ng-include="'flight_select.html'"></div>
+            </div> <!-- row -->
+          </div> <!-- flight selection -->
+            <div class="animate-switch" ng-switch-when="seat"
+                 my-show="show" after-show="afterShow()" after-hide="afterHide()">
+              <div class="seating" id="seatingDiagram"></div>
+            </div> <!-- seating selection -->
+            <div class="animate-switch" ng-switch-when="payment" style="color:white;">
+              <div ng-controller="paymentController as paymentCtrl">
+                <div ng-include="'payment.html'"> </div>
               </div>
-              <div class="animate-switch" ng-switch-when="payment" style="color:white;">
-                
-
-
-<style>
-	.ng-invalid.ng-dirty {
-		border-color: red;
-	}
-	.ng-valid.ng-dirty {
-		border-color: green;
-	}
-</style>
-
-<div ng-controller="paymentController as paymentCtrl">
-    <div ng-include="'payment.html'"> </div>
-</div>
-  
-
-<script>
-	app.controller("paymentController", function () {
-		var paymentInfo = {
-			cardType: "",
-			nameOnCard: "",
-			cardNumber: "",
-			expireDate: "",
-			cvv: ""
-		};
-		var billAddrInfo = {
-			address1: "",
-			address2: "",
-			city: "",
-			state: "",
-			zip: "",
-			country: ""
-		};
-		var custAddrInfo = {
-			address1: "",
-			address2: "",
-			city: "",
-			state: "",
-			zip: "",
-			country: ""
-		};
-		
-		this.sameInfo = false;
-		this.sameAddress = function () {
-			this.billAddrInfo.address1 = this.custAddrInfo.address1;
-			this.billAddrInfo.address2 = this.custAddrInfo.address2;
-			this.billAddrInfo.city = this.custAddrInfo.city;
-			this.billAddrInfo.state = this.custAddrInfo.state;
-			this.billAddrInfo.zip = this.custAddrInfo.zip;
-			this.billAddrInfo.country = this.custAddrInfo.country;
-		};
-	});
-</script>
-
-
-              </div>
-          </div>
-
+              <script>
+	                app.controller("paymentController", function () {
+		                var paymentInfo = {
+			                cardType: "",
+			                nameOnCard: "",
+			                cardNumber: "",
+			                expireDate: "",
+			                cvv: ""
+		                };
+		                var billAddrInfo = {
+			                address1: "",
+			                address2: "",
+			                city: "",
+			                state: "",
+			                zip: "",
+			                country: ""
+		                };
+		                var custAddrInfo = {
+			                address1: "",
+			                address2: "",
+			                city: "",
+			                state: "",
+			                zip: "",
+			                country: ""
+		                };
+		                
+		                this.sameInfo = false;
+		                this.sameAddress = function () {
+			                this.billAddrInfo.address1 = this.custAddrInfo.address1;
+			                this.billAddrInfo.address2 = this.custAddrInfo.address2;
+			                this.billAddrInfo.city = this.custAddrInfo.city;
+			                this.billAddrInfo.state = this.custAddrInfo.state;
+			                this.billAddrInfo.zip = this.custAddrInfo.zip;
+			                this.billAddrInfo.country = this.custAddrInfo.country;
+		                };
+	                });
+              </script>
+            </div> <!-- payment -->
+          </div> <!-- switch animation div -->
          <script>
             // new dependency: ngResource is included just above
             //        var nma = new angular.module("nma", ["ngResource"]);
   
             // inject the $resource dependency here
-            //  nma.controller("TripSelection", ["$scope", "$resource", function($scope, $resource){
+            //  nma.controller("TripSelection", ["$scope", "$resource",
+            //   function($scope, $resource){
             // I designed the backend to play nicely with angularjs so this is all the
             // setup we need to do all of the ususal operations.
             //  var Ticket = $resource("/trip/:id", {id: '@id'}, {}); }
             //  }
 
             initSeating();
-         </script>
-         <script type="text/javascript" src="js/picker.js"></script>
- 
+        </script>
+      </div> <!-- col-10 -->
+      <div class="col-2">
+
+      </div> <!-- col-2 -->
+      </div> <!-- row -->
+      </div> <!-- sheet -->
     </div> <!-- container -->
   </body>
 </html>
