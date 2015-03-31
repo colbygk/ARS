@@ -26,20 +26,32 @@
     <script>
       var app = angular.module('nma', ['ngAnimate']);
       
-      app.controller('TripSelection', ['$scope', function($scope) {
-            $scope.items = ['flight', 'seat', 'payment','ticket'];
-            $scope.selection = $scope.items[0];
-			$scope.seatLayout = 0;
-            $scope.afterShow = function() {
-  //            window.alert('Fully shown');
-              initSeating();
-              generateLayout($scope.seatLayout);
-            }
+      app.controller('TripSelection', function($scope, $http) {
+          $scope.items = ['flight', 'seat', 'payment','ticket'];
+          $scope.selection = $scope.items[0];
 
-            $scope.afterHide = function() {
-   //           window.alert('Fully hidden');
-            }
-            }]);
+          $scope.seatLayout = 0;
+          $scope.afterShow = function() {
+            initSeating();
+            generateLayout($scope.seatLayout);
+          }
+
+          $scope.afterHide = function() {
+          }
+
+          $http.get('flights.json').then( function(res) {
+              $scope.flights = res.data;
+              $scope.flights.every(
+                function( e, i, a ) {
+                  e.depart = new Date(e.depart);
+                  e.arrive = new Date(e.arrive);
+                  return true;
+                });
+            });
+          $http.get('airports.json').then( function(res) {
+              $scope.airports = res.data;
+            });
+        });
 
        app.directive('myShow', function($animate) {
            return {

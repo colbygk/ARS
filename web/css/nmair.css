@@ -75,3 +75,22 @@ color: black;
   border-color: green;
 }
 
+.flight-info {
+ background: orange;
+ border: solid 1px darkorange;
+ border-radius: 10px;
+ margin: 1em 0em 0em 0em;
+}
+
+.depart-flight {
+ width: 50px;
+ vertical-align: top;
+}
+
+#airport1 {
+ margin: 0.5em 0em 0em 0em;
+}
+
+#airport2 {
+ margin: 0.5em 0em 0em 0em;
+}

@@ -6,14 +6,21 @@
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span></span>
                   </div> <!-- depicker -->
-                    <div class='input-group input-xxlg' id='airport1'>
-                      <select class="form-control">
-                        <option value="abq">ABQ (Albuquerque NM, Sunport)</option>
-                        <option value="bos">BOS (Boston MA, Logan)</option>
-                        <option value="ord">ORD (Chicago IL, O'Hare</option>
-                        <option value="lax">LAX (Los Angeles CA, International)</option>
+                    <div class='input-group input-xxlg col-md-12' id='airport1'>
+                      <select class="form-control" ng-model="departq">
+                        <option ng-repeat="airport in airports"
+                                value="{{airport.code}}">{{airport.desc}}</option>
                       </select>
                     </div> <!-- airport1 -->
+                    <div ng-repeat="flight in flights | filter:{origin:departq}" class="flight-info row">
+                      <div class="col-sm-2">
+                        <img class="depart-flight" src="images/Airplane_silhouette.svg"/>
+                      </div>
+                      <div class="col-sm-9">
+                        Flight: {{flight.id}} {{flight.depart | date:'short'}}<br/>
+                        <div style="font-size: 1.7em;">{{flight.origin}} &rarr; {{flight.destination}}</div>
+                      </div>
+                    </div>
                   </div> <!-- form-group -->
                 </div> <!-- col-sm-6 col-md-6 -->
                 <div class='col-sm-6 col-md-6'>
@@ -26,10 +33,8 @@
                     </div> <!-- repicker -->
                     <div class='input-group input-xxlg' id='airport2'>
                       <select class="form-control">
-                        <option value="abq">ABQ (Albuquerque NM, Sunport)</option>
-                        <option value="bos">BOS (Boston MA, Logan)</option>
-                        <option value="ord">ORD (Chicago IL, O'Hare</option>
-                        <option value="lax">LAX (Los Angeles CA, International)</option>
+                        <option ng-repeat="airport in airports"
+                                value="{{airport.code}}">{{airport.desc}}</option>
                       </select>
                     </div> <!-- airport2 -->
                   </div> <!-- form-group -->
