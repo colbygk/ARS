@@ -136,6 +136,7 @@ function generateLayout(layoutMode) {
 				label: (i + 1).toString(),
 				fill: null,
 				stroke: "black",
+				textStroke: "black",
 				figure: "Circle",
 				oldFill: colorList.get(colorIndex),
 				locPoint: locPoint,
