@@ -87,6 +87,12 @@ color: black;
  width: 50px;
  vertical-align: top;
 }
+.return-flight {
+ transform:rotate(180deg);
+ -webkit-transform:rotate(180deg);
+ width: 50px;
+ vertical-align: top;
+}
 
 #airport1 {
  margin: 0.5em 0em 0em 0em;

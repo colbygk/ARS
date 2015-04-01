@@ -26,7 +26,10 @@
     <script>
       var app = angular.module('nma', ['ngAnimate']);
       
-      app.controller('TripSelection', function($scope, $http) {
+      app.controller('TripCtrl', function($scope, $http) {
+
+          $scope.parent = {depicker:'',repicker:''};
+
           $scope.items = ['flight', 'seat', 'payment','ticket','singleticket'];
           $scope.selection = $scope.items[0];
 
@@ -37,6 +40,11 @@
           }
 
           $scope.afterHide = function() {
+          }
+
+          $scope.repick = function(f) {
+            console.log(f);
+            $scope.returnq = f;
           }
 
           $http.get('flights.json').then( function(res) {
@@ -72,6 +80,21 @@
              }
            }
          });
+
+       app.filter('isOnDay', function() {
+           return function(flights, onDay) {
+             return flights.filter( function(flight) {
+               console.log('flight');
+               var da = moment(flight.depart);
+//               console.log(da);
+//               console.log('onDay');
+               var ad = moment(onDay);
+//               console.log(onDay);
+//               console.log(ad);
+               return moment(da).isSame(ad,'day');
+             })
+           }
+         });
       
     function delayinit(v) {
       show = false;
@@ -85,7 +108,7 @@
   </head>
 
   <body ng-app="nma">
-    <div class="container" ng-controller="TripSelection">
+    <div class="container" ng-controller="TripCtrl">
       <div class="jumbotron container">
         <h1>NM Air</h1>
         <h2>Plan Your Trip Now</h2>
@@ -181,7 +204,7 @@
             //        var nma = new angular.module("nma", ["ngResource"]);
   
             // inject the $resource dependency here
-            //  nma.controller("TripSelection", ["$scope", "$resource",
+            //  nma.controller("TripCtrl", ["$scope", "$resource",
             //   function($scope, $resource){
             // I designed the backend to play nicely with angularjs so this is all the
             // setup we need to do all of the ususal operations.

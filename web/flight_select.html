@@ -1,8 +1,12 @@
 <!-- included from flight_select.html -->
               <div class='col-sm-6 col-md-6'>
                 <div class="form-group">
+                <!-- NB: Colby - Known issue with using bootstrap-datetimepicker and AngularJS
+                     is that you cannot directly bind to it via ng-model, see
+                     potential long term solutions here:
+                     http://stackoverflow.com/questions/19316937/bootstrap-datepicker-not-binding-with-angularjs-ng-model -->
                   <div class='input-group date' id='depicker'>
-                    <input type='text' class="form-control" placeholder="Departure"/>
+                    <input type='text' ng-model="depicker" class="form-control" placeholder="Departure"/>
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span></span>
                   </div> <!-- depicker -->
@@ -12,11 +16,11 @@
                                 value="{{airport.code}}">{{airport.desc}}</option>
                       </select>
                     </div> <!-- airport1 -->
-                    <div ng-repeat="flight in flights | filter:{origin:departq}" class="flight-info row">
+                    <div ng-repeat="flight in flights | filter:{origin:departq} | isOnDay:depicker" class="flight-info row">
                       <div class="col-sm-2">
                         <img class="depart-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
-                      <div class="col-sm-9">
+                      <div class="col-sm-9" id="{{flight.id}}" ng-click="repick(flight.destination)">
                         Flight: {{flight.id}} {{flight.depart | date:'short'}}<br/>
                         <div style="font-size: 1.7em;">{{flight.origin}} &rarr; {{flight.destination}}</div>
                       </div>
@@ -26,17 +30,25 @@
                 <div class='col-sm-6 col-md-6'>
                   <div class="form-group">
                     <div class='input-group date' id='repicker'>
-                      <input type='text' class="form-control" placeholder="Return"/>
+                      <input type='text' class="form-control" placeholder="Return" ng-model="repicker" />
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                     </div> <!-- repicker -->
                     <div class='input-group input-xxlg col-sm-12 col-md-12 col-xs-12' id='airport2'>
-                      <select class="form-control">
+                      <select class="form-control" ng-model="returnq">
                         <option ng-repeat="airport in airports"
                                 value="{{airport.code}}">{{airport.desc}}</option>
                       </select>
                     </div> <!-- airport2 -->
+                    <div ng-repeat="flight in flights | filter:{origin:returnq} | isOnDay:repicker" class="flight-info row">
+                      <div class="col-sm-2">
+                        <img class="return-flight" src="images/Airplane_silhouette.svg"/>
+                      </div>
+                      <div class="col-sm-9" id="{{flight.id}}">
+                        Flight: {{flight.id}} {{flight.depart | date:'short'}}<br/>
+                        <div style="font-size: 1.7em;">{{flight.origin}} &rarr; {{flight.destination}}</div>
+                      </div>
                   </div> <!-- form-group -->
                 </div> <!-- col-sm-6 col-md-6 -->
 
