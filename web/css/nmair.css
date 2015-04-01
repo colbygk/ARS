@@ -10,6 +10,7 @@ body {
 
 .seating {
   background: #454545;
+  margin: 0 auto;
 }
 
 .sheet-control-container {
