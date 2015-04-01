@@ -28,10 +28,11 @@
       
       app.controller('TripCtrl', function($scope, $http) {
 
+          $scope.sc = 0;
           $scope.parent = {depicker:'',repicker:''};
 
           $scope.items = ['flight', 'seat', 'payment','ticket','singleticket'];
-          $scope.selection = $scope.items[0];
+          $scope.selection = $scope.items[$scope.sc];
 
           $scope.seatLayout = 0;
           $scope.afterShow = function() {
@@ -47,6 +48,18 @@
             $scope.returnq = f;
           }
 
+          $scope.nextselection = function() {
+            $scope.sc = ($scope.sc+1) % $scope.items.length;
+            $scope.selection = $scope.items[$scope.sc];
+          }
+
+          $scope.prevselection = function() {
+            $scope.sc = ($scope.sc-1) % $scope.items.length;
+            if ( $scope.sc < 0 )
+              $scope.sc = $scope.items.length - 1;
+
+            $scope.selection = $scope.items[$scope.sc];
+          }
           $http.get('flights.json').then( function(res) {
               $scope.flights = res.data;
               $scope.flights.every(
@@ -113,10 +126,12 @@
         <h1>NM Air</h1>
         <h2>Plan Your Trip Now</h2>
         <div id="switcher">
-          <select ng-model="selection"
+          <select ng-model="selection" style='visibility:hidden;'
                   onchange="delayinit(this.value)" ng-options="item for item in items">
           </select>
         </div>
+        <span style="color:white;" ng-click="prevselection()">prev</span>
+        <span style="color:white;" ng-click="nextselection()">next</span>
       </div> <!-- Jumbotron container -->
       <div class="sheet-control-container">
         <div class="row">  

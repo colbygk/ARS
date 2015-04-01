@@ -2,6 +2,7 @@
   { "code":"ABQ", "desc":"ABQ (Albuquerque NM, Sunport)" },
   { "code":"BOS", "desc":"BOS (Boston MA, Logan)" },
   { "code":"DFW", "desc":"DFW (Dallas TX, Dallas-Fort Worth)" },
+  { "code":"OAK", "desc":"OAK (Oakland CA, Oakland International)" },
   { "code":"ORD", "desc":"ORD (Chicago IL, O'Hare)" },
   { "code":"LAX", "desc":"LAX (Los Angeles CA, International)" },
   { "code":"NIP", "desc":"NIP (Pandora, Na'vi Interstellar Port)" }
