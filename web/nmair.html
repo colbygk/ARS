@@ -27,7 +27,7 @@
       var app = angular.module('nma', ['ngAnimate']);
       
       app.controller('TripSelection', function($scope, $http) {
-          $scope.items = ['flight', 'seat', 'payment','ticket'];
+          $scope.items = ['flight', 'seat', 'payment','ticket','singleticket'];
           $scope.selection = $scope.items[0];
 
           $scope.seatLayout = 0;
@@ -109,10 +109,34 @@
                  my-show="show" after-show="afterShow()" after-hide="afterHide()">
               <div class="seating" id="seatingDiagram"></div>
             </div> <!-- seating selection -->
+
+            <div class="animate-switch" ng-switch-when="ticket" style="color:white;">
+              <div ng-controller="ticketController as tktController">
+                <div ng-include="'tickets.html'"> </div>
+              </div>
+              
+              <script>
+                  app.controller("ticketController", function () {
+                  });
+              </script>
+            </div> <!-- ticket -->
+
+            <div class="animate-switch" ng-switch-when="singleticket" style="color:white;">
+              <div ng-controller="ticketController2">
+                <div ng-include="'single_ticket.html'"> </div>
+              </div>
+              <script>
+                  app.controller("ticketController2", function () {
+                  });
+              </script>
+            </div> <!-- singleTicket -->
+
+
             <div class="animate-switch" ng-switch-when="payment" style="color:white;">
               <div ng-controller="paymentController as paymentCtrl">
                 <div ng-include="'payment.html'"> </div>
               </div>
+
               <script>
 	                app.controller("paymentController", function () {
 		                var paymentInfo = {

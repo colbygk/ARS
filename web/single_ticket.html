@@ -1,190 +1,79 @@
-<!doctype html>
-<html lang="en" ng-app="myapp">
-<head>
-	<meta charset="UTF-8">
-	<title>NM Air</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.0/cyborg/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/static/css/ticketing.css">
-  <style>
-    h1 { font-family: 'airstreamregular',Serif; font-size: 64pt; }; 
-    .well { font-family: Serif; };
-  </style>
-</head>
+<div>
+	<style>
+		table, th , td  {
+		  	border: 2px solid black;
+		  	padding: 15px;
+			border-radius: 10px;
+			-moz-border-radius: 15px;
+		}
+		table tr:nth-child(odd)	{
+		  background-color: #ffffff;
+		  color: black;
+		  font-size: 16pt;
+		}
+		table tr:nth-child(even) {
+		  background-color: #ffffff;
+		  color: black;
+		  font-size: 16pt;
+		}
 
-<!-- putting this at the top to remove the jarring load -->
-<script src="http://code.angularjs.org/1.2.10/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
-
-<body>
-	<div class="jumbotron">
-		<h1>NM Air</h1>
-
-		<button class="btn btn-danger pull-right" ng-click="remove(selected.idx)">
-			<i class="fa"></i> <img style="margin:0px" src="./images/ic_action_gplus_old.png" alt="QR" height="28" width="28"> Sign-in with Google+ 
+	</style>
+		<button class="btn btn-primary form-control" style="margin:0px" ng-click="load_ticket()">
+			<i class="fa" style="font-size: 14pt;"> Print Ticket</i>
 		</button>
-	</div>
 
-	<div ng-controller="MainController" style="vertical-align: bottom">
-		<style>
-			table, th , td  {
-			  	border: 2px solid black;
-			  	padding: 15px;
-    			border-radius: 10px;
-    			-moz-border-radius: 15px;
-			}
-			table tr:nth-child(odd)	{
-			  background-color: #ffffff;
-			  color: black;
-			  font-size: 16pt;
-			}
-			table tr:nth-child(even) {
-			  background-color: #ffffff;
-			  color: black;
-			  font-size: 16pt;
-			}
-
-		</style>
-			<table class="table" style="background-color: #666666; border-radius: 0px">
-				<thead>
-				<tr style="background-color: orange">
-					<th style="color:black">Ticket Summary</th> 
-				</tr>
-				</thead>
-			</table>
-
-
-			<button class="btn btn-primary form-control" style="margin:0px" ng-click="load_ticket()">
-				<i class="fa" style="font-size: 14pt;"> Print Ticket</i>
-			</button>
-
-			<table class="table" style="background-color: #ffffff; border: 0px; border-radius: 0px">
+		<table id='table2' class="table" style="background-color: #ffffff; border: 0px; border-radius: 0px">
 			<thead>
-			<tr style="background-color: #ffffff">
-				<th>First Name</th>
-				<th>Last Name</th>
-				<th>FlightID</th>
-				<th><img src=".\images\depart_plane.png" alt="depart" height="24" width="24"> Depart City</th>
-				<th><img src=".\images\arrive_plane.png" alt="arriving" height="24" width="24">Destination City</th>
-				<th>Flight Date</th>
-				<th></th>
-			</tr>
-			</thead>
+				<tr style="background-color: #ffffff">
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>FlightID</th>
+					<th>Flight Date</th>
+					<th><img src=".\images\depart_plane.png" alt="depart" height="24" width="24"> Depart City</th>
+					<th><img src=".\images\arrive_plane.png" alt="arriving" height="24" width="24">Destination City</th>
+					<th></th>
+				</tr>
+			</thead>		
+		<tbody id='tbody2'>
+		</tbody>
 
-			<tbody>
-				<th>{{tickets[0].firstname}}</th>
-				<th>{{tickets[0].lastname}}</th>
-				<th>{{tickets[0].flightid}}</th>
-				<th>{{tickets[0].departcity}} </th>
-				<th>{{tickets[0].arrivecity}}</th>
-				<th>{{tickets[0].flightdate}}</th>
-				<th><img src="./images/qr_code.png" alt="QR" height="128" width="128"></th>
-			</tr>
-			</tbody>
-			</table>
+		<script language="javascript" type="text/javascript">
+		<!--
+		 function makeRow(rowData, tableBody) {
+		    var row = document.createElement('tr');
 
-	</script>
-	
-	<script>
-	// new dependency: ngResource is included just above
-	var myapp = new angular.module("myapp", ["ngResource"]);
+		    rowData.forEach(function(cellData) {
+		      var cell = document.createElement('td');
+		      cell.appendChild(document.createTextNode(cellData));
+		      row.appendChild(cell);
+		    });
 
-	// inject the $resource dependency here
-	myapp.controller("MainController", ["$scope", "$resource", function($scope, $resource){
-		// I designed the backend to play nicely with angularjs so this is all the
-		// setup we need to do all of the ususal operations.
-		var Ticket = $resource("/tickets/:id", {id: '@id'}, {});
-		var TicketID = $resource("/selected_ticket_id", {}, {});
+		    //<th><img src= alt="QR" height="128" width="128"></th>
+		  	var img = document.createElement('img');
+		  	img.setAttribute('src', "./images/qr_code.png");
+		  	img.setAttribute('height',128);
+		  	img.setAttribute('width',128);
 
-	    //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
-	    $scope.displayedCollection = [].concat($scope.rowCollection);
+		  	row.appendChild(img);
+		    tableBody.appendChild(row);
+		  };
 
-	    //add to the real data holder
-	    $scope.addRandomItem = function addRandomItem() {
-	    	console.log("Random");
-	        $scope.rowCollection.push(generateRandomItem(id));
-	        id++;
-	    };
+		function createTable(tableData) {
+			var index;
 
-	    //remove to the real data holder
-	    $scope.removeItem = function removeItem(row) {
-	        var index = $scope.rowCollection.indexOf(row);
-	        if (index !== -1) {
-	            $scope.rowCollection.splice(index, 1);
-	        }
-	    }
+			var table = document.getElementById('table2')
+		   	var tableBody = document.getElementById('tbody2')
 
-	    $scope.showtooltip = false;
-			$scope.selected = null;
+		   	for	(index = 0; index < tableData.length; index++) {
+		   		makeRow(tableData[index], tableBody);
+		  	}
+		  	table.appendChild(tableBody);
+		}
 
-	    $scope.hideToolTip = function(){
-	      $scope.showtooltip = false;
-	    }
-
-	    $scope.toggleToolTip = function(e){
-	      e.stopPropagation();
-	      $scope.showtooltip = !$scope.showtooltip;
-	    }
-
-		$scope.list = function(idx){
-			// Notice calls to Ticket are often given callbacks.
-			Ticket.query(function(data){
-				$scope.tickets = data;
-				if(idx != undefined) {
-					$scope.selected = $scope.tickets[idx];
-					$scope.selected.idx = idx;
-				}
-			}, function(error){
-				alert(error.data);
-			});
-		};
-
-		$scope.list();
-
-		$scope.get = function(idx){
-			// Passing parameters to Ticket calls will become arguments if
-			// we haven't defined it as part of the path (we did with id)
-			Ticket.get({id: $scope.tickets[idx].id}, function(data){
-				$scope.selected = data;
-				$scope.selected.idx = idx;
-			});
-		};
-
-		$scope.add = function() {
-			var firstname = firstnames[Math.floor(Math.random() * 3)];
-	        var lastname = lastnames[Math.floor(Math.random() * 3)];
-	        var flightID = 2;
-	        var sourceCity = "test";
-	        var destinationCity = "test";
-
-			// Creating a blank ticket object means you can still $save
-			var newTicket = new Ticket();
-			newTicket.passenger = passenger;
-			newTicket.flightID = flightID;
-			newTicket.sourceCity;
-			newTicket.destinationCity;
-
-			newTicket.$save();
-			$scope.list();
-		};
-
-		$scope.update = function(idx) {
-			var ticket = $scope.tickets[idx];
-
-			// Noticed I never created a new Ticket()?
-			ticket.$save();
-
-			$scope.list(idx);
-		};
-
-		$scope.remove = function(idx){
-			$scope.tickets[idx].$delete();
-			$scope.selected = null;
-			$scope.list();
-		};
-	}]);
-
-</script>
-</body>
-</html>
+		t1 = ["Nathan", "Acosta", "NMA4601", "12/4/2015", "Albuquerque, NM","Dallas, TX"];
+		createTable([t1]);
+		//-->
+		</script>
+	</table>
+	</style>
+</div>
