@@ -101,3 +101,35 @@ color: black;
 #airport2 {
  margin: 0.5em 0em 0em 0em;
 }
+
+
+.flight-info-animation.ng-enter, 
+  .flight-info-animation.ng-leave {
+      -webkit-transition: 0.1s linear all;
+        transition: 0.1s linear all;
+                      position:relative;
+  }
+
+.flight-info-animation.ng-enter-stagger {
+    /* 50ms will be applied between each sucessive enter operation */ 
+    -webkit-transition-delay:0.05s;
+      transition-delay:0.05s;
+
+        /* this is here to avoid accidental CSS inheritance */
+        -webkit-transition-duration:0;
+          transition-duration:0;
+}
+
+.flight-info-animation.ng-enter {
+    opacity:0;
+}
+.flight-info-animation.ng-enter.ng-enter-active {
+    opacity:1;
+}
+
+.flight-info-animation.ng-leave {
+    opacity:1;
+}
+.flight-info-animation.ng-leave.ng-leave-active {
+    opacity:0;
+}

@@ -16,7 +16,7 @@
                                 value="{{airport.code}}">{{airport.desc}}</option>
                       </select>
                     </div> <!-- airport1 -->
-                    <div ng-repeat="flight in flights | filter:{origin:departq} | isOnDay:depicker" class="flight-info row">
+                    <div ng-repeat="flight in flights | filter:{origin:departq} | isOnDay:depicker" class="flight-info flight-info-animation row">
                       <div class="col-sm-2">
                         <img class="depart-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
@@ -41,7 +41,7 @@
                                 value="{{airport.code}}">{{airport.desc}}</option>
                       </select>
                     </div> <!-- airport2 -->
-                    <div ng-repeat="flight in flights | filter:{origin:returnq} | isOnDay:repicker" class="flight-info row">
+                    <div ng-repeat="flight in flights | filter:{origin:returnq} | isOnDay:repicker" class="flight-info flight-info-animation row">
                       <div class="col-sm-2">
                         <img class="return-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
