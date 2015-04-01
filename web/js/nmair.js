@@ -1,12 +1,3 @@
-(function(angular) {
-   'use strict';
-   angular.module('nma', ['ngAnimate'])
-     .controller('nmaController', ['$scope', function($scope) {
-           $scope.items = ['flight', 'seat', 'other'];
-               $scope.selection = $scope.items[1];
-                 }]);
-     })(window.angular);
-
 
 function initSeating() {
     console.log("initSeating");
