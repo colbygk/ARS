@@ -103,12 +103,17 @@ color: black;
 }
 
 
-.flight-info-animation.ng-enter, 
-  .flight-info-animation.ng-leave {
-      -webkit-transition: 0.1s linear all;
-        transition: 0.1s linear all;
-                      position:relative;
-  }
+.flight-info-animation.ng-enter {
+  -webkit-transition: 0.1s linear all;
+  transition: 0.1s linear all;
+  position:relative;
+}
+
+.flight-info-animation.ng-leave {
+  -webkit-transition: 0.0s linear all;
+  transition: 0.0s linear all;
+  position:relative;
+}
 
 .flight-info-animation.ng-enter-stagger {
     /* 50ms will be applied between each sucessive enter operation */ 
