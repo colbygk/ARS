@@ -24,7 +24,7 @@
     <!--link rel="stylesheet"
       href="/static/css/ticketing.css"-->
     <script>
-      var app = angular.module('nma', ['ngAnimate']);
+      var app = angular.module('NMA', ['ngAnimate']);
       
       app.controller('TripCtrl', function($scope, $http) {
 
@@ -44,7 +44,7 @@
           }
 
           $scope.repick = function(f) {
-            console.log(f);
+            // console.log(f);
             $scope.returnq = f;
           }
 
@@ -74,6 +74,21 @@
             });
         });
 
+    app.directive('ptPucker', function () {
+      console.log('ptPucker');
+      return {
+        restrict: 'A', 
+        require: '^ngModel',
+        link: function(scope, element, attributes, ctrl) {
+          console.log('ptPucker link');
+          console.log(scope);
+          console.log(element);
+          console.log(attributes);
+          console.log(ctrl);
+          }
+        }
+      });
+
        app.directive('myShow', function($animate) {
            return {
              scope: {
@@ -97,7 +112,7 @@
        app.filter('isOnDay', function() {
            return function(flights, onDay) {
              return flights.filter( function(flight) {
-               console.log('flight');
+               //console.log('flight');
                var da = moment(flight.depart);
 //               console.log(da);
 //               console.log('onDay');
@@ -107,7 +122,44 @@
                return moment(da).isSame(ad,'day');
              })
            }
-         });
+           });
+
+ // Derived from
+ // http://cdmckay.org/blog/2014/12/08/how-to-create-an-angular-directive-for-eonasdans-bootstrap-datetime-picker/ 
+
+    app.directive('nmaDtPicker', function () {
+        var format = 'MM/DD/YYYY hh:mm A';
+        return {
+            restrict: 'A',
+            require: '^ngModel',
+            link: function (scope, element, attributes, ctrl) {
+
+                element.datetimepicker({
+                    format: format
+                });
+
+                var picker = element.data("DateTimePicker");
+ 
+                ctrl.$formatters.push(function (value) {
+                    if ( typeof(value) != 'undefined' && value != '' )
+                    {
+                      var date = moment(value);
+                      if (date.isValid()) {
+                        return date.format(format);
+                      }
+                    }
+                    return '';
+                });
+ 
+                element.on('dp.change', function (event) {
+                    scope.$apply(function() {
+                        var date = picker.date();
+                        ctrl.$setViewValue(date.valueOf());
+                    });
+                });
+            }
+        }
+      });
       
     function delayinit(v) {
       show = false;
@@ -120,7 +172,7 @@
 
   </head>
 
-  <body ng-app="nma">
+  <body ng-app="NMA">
     <div class="container" ng-controller="TripCtrl">
       <div class="jumbotron container">
         <h1>NM Air</h1>
@@ -226,7 +278,6 @@
             //  var Ticket = $resource("/trip/:id", {id: '@id'}, {}); }
             //  }
 
-            initSeating();
         </script>
       </div> <!-- col-10 -->
       <div class="col-2">

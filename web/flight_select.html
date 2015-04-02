@@ -4,12 +4,21 @@
                 <!-- NB: Colby - Known issue with using bootstrap-datetimepicker and AngularJS
                      is that you cannot directly bind to it via ng-model, see
                      potential long term solutions here:
-                     http://stackoverflow.com/questions/19316937/bootstrap-datepicker-not-binding-with-angularjs-ng-model -->
+                     http://stackoverflow.com/questions/19316937/bootstrap-datepicker-not-binding-with-angularjs-ng-model
+                     NB: The solutions listed in that post no longer work with AngularJS 1.3+ ...
+                     -->
                   <div class='input-group date' id='depicker'>
-                    <input type='text' ng-model="depicker" class="form-control" placeholder="Departure"/>
-                    <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span></span>
+                    <!-- this solution found at:
+                    http://cdmckay.org/blog/2014/12/08/how-to-create-an-angular-directive-for-eonasdans-bootstrap-datetime-picker/ -->
+                    <input type='text'
+                           class="form-control"
+                           ng-model="depicker"
+                           nma-dt-picker
+                           placeholder="Departure" />
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span></span>
                   </div> <!-- depicker -->
+
                     <div class='input-group input-xxlg col-sm-12 col-md-12 col-xs-12' id='airport1'>
                       <select class="form-control" ng-model="departq">
                         <option ng-repeat="airport in airports"
@@ -29,12 +38,18 @@
                 </div> <!-- col-sm-6 col-md-6 -->
                 <div class='col-sm-6 col-md-6'>
                   <div class="form-group">
+
                     <div class='input-group date' id='repicker'>
-                      <input type='text' class="form-control" placeholder="Return" ng-model="repicker" />
+                      <input type='text'
+                             class="form-control"
+                             nma-dt-picker
+                             ng-model="repicker"
+                             placeholder="Return" />
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                     </div> <!-- repicker -->
+
                     <div class='input-group input-xxlg col-sm-12 col-md-12 col-xs-12' id='airport2'>
                       <select class="form-control" ng-model="returnq">
                         <option ng-repeat="airport in airports"
