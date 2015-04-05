@@ -25,26 +25,24 @@ then
     touch /var/log/dbinstalled
 fi
 
-export TM8DEV=/ars/dev
-if [ ! -f ${TM8DEV} ];
+export TM8DEV=/ARS
+if [ -d ${TM8DEV} ];
 then
-  mkdir -p ${TM8DEV}
   cd ${TM8DEV}
-  if [ ! -d ARS ];
-  then
-    git clone https://github.com/colbygk/ARS.git
-  fi
-  cd ARS
   if [ -f schema/ars.sql ];
   then
     mysql -uroot -p@RSdev ARSdb < schema/ars.sql
   fi
   if [ ! -d go/src/github.com ];
   then
-    export GOPATH=${TM8DEV}/ARS/go
+    export GOPATH=${TM8DEV}/go
+    echo "export GOPATH=${GOPATH}" >> ~vagrant/.bashrc
     cd $GOPATH
     go get github.com/gorilla/mux
     go get github.com/go-sql-driver/mysql
+    cd ars-server
+    go build
+    ./ars-launch >& ars-server.log &
   fi
 fi
 
