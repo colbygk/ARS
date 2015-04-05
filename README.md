@@ -35,8 +35,7 @@ This source tree is comprised of four main components:
 
 You should install (for your OS):
 
-  [VirtualBox](http://virtualbox.org)
-  [Vagrant](http://vagrantup.org)
+  [VirtualBox](http://virtualbox.org) and [Vagrant](http://vagrantup.org)
 
 Once you have cloned this repository, cd into the main directory 'ARS',
 then,
@@ -59,11 +58,11 @@ pointing at the 'web' directory of the repository.
 
 To access the VM, you can do,
 
-   $ vagrant ssh
+    $ vagrant ssh
 
 This should connect you to the VM. You can then do:
 
-  $ cd /ARS
+    $ cd /ARS
 
 Now you will be in the directory that contains the repository you
 cloned and where you launched this instance of Vagrant.  A copy of
