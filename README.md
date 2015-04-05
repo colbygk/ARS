@@ -89,7 +89,8 @@ covering 04/27/2015-04/28/2015
 
 
  If you wish to rebuild the ars-server, you should have GOPATH
- set (already done for you under the Vagrant VM).
+ set (already done for you under the Vagrant VM, i.e. you should
+ only need to do this if you're not using Vagrant).
  e.g.
 
      $ export GOPATH="/Users/colby/Spring2015/CS460/repos/ARS/go"
