@@ -16,8 +16,9 @@ airports.forEach( function(e) {
 flights.forEach( function(e) {
     insert_str = "insert into flights " +
      "(id_str,depart_airport,depart_time,arrive_airport,arrive_time) values ('" +
-     e.id+"',(select id from airports where short_name='"+e.origin+"'),'"+e.depart+
-     ":00',(select id from airports where short_name='"+e.destination+"'),'"+e.arrive+
-     ":00');";
-     console.log(insert_str.replace(/\//g,"-"));
+     e.id+"',(select id from airports where short_name='"+e.origin+"'),STR_TO_DATE('"+e.depart+
+     ":00','%m/%d/%Y %h:%i')),(select id from airports where short_name='"+e.destination+"'),"+
+     "STR_TO_DATE('"+e.arrive+":00','%m/%d/%Y %h:%i'));";
+
+     console.log(insert_str);
     });
