@@ -1,0 +1,10 @@
+* text=false
+
+*.go text
+*.html text
+*.css text
+*.js text
+
+*.png binary
+*.jpg binary
+*.svg binary
