@@ -17,7 +17,7 @@ flights.forEach( function(e) {
     insert_str = "insert into flights " +
      "(id_str,depart_airport,depart_time,arrive_airport,arrive_time) values ('" +
      e.id+"',(select id from airports where short_name='"+e.origin+"'),'"+e.depart+
-     "',(select id from airports where short_name='"+e.destination+"'),'"+e.arrive+
-     "');";
-     console.log(insert_str);
+     ":00',(select id from airports where short_name='"+e.destination+"'),'"+e.arrive+
+     ":00');";
+     console.log(insert_str.replace(/\//g,"-"));
     });
