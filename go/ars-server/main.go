@@ -8,12 +8,26 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 
-        "database/sql"
-        _ "github.com/go-sql-driver/mysql"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"gopkg.in/gorp.v1"
 )
+
+var connectStr = "ars:ARSePassW0rd@/ARSdb?parseTime=true"
+var dbType = "mysql"
+
+func checkErr(err error, msg string) bool {
+
+	if err != nil {
+		log.Fatalln(msg, err)
+	}
+
+	return err != nil
+}
 
 // error response contains everything we need to use http.Error
 type handlerError struct {
@@ -24,20 +38,51 @@ type handlerError struct {
 
 // ticket model
 type ticket struct {
-	FirstName string `json:"firstname"`
-	LastName string `json:"lastname"`
-	SourceCity  string `json:"arrivecity"`
-	DepartCity  string `json:"departcity"`
-	FlightID  string `json:"flightid"`
-	FlightDate string `json:"flightdate"`
-	Id        int    `json:"id"`
+	FirstName        string `json:"firstname"`
+	LastName         string `json:"lastname"`
+	SourceCity       string `json:"arrivecity"`
+	DepartCity       string `json:"departcity"`
+	FlightID         string `json:"flightid"`
+	FlightDate       string `json:"flightdate"`
+	Id               int    `json:"id"`
 	BackgroundArrive string `json:"backgroundarrive"`
 	BackgroundDepart string `json:"backgrounddepart"`
 }
 
 // list of all of the tickets
 var tickets = make([]ticket, 0)
-var selected_ticket_id = 0;
+var selected_ticket_id = 0
+
+type Airport struct {
+	Id        int    `json:"id"`
+	ShortName string `json:"shortname" db:"short_name"`
+	LongName  string `json:"longname" db:"long_name"`
+}
+
+type Flight struct {
+	Id            int       `json:"id" db:"id"`
+	IdStr         string    `json:"idstr" db:"id_str"`
+	DepartAirport string    `json:"departairport" db:"depart_airport"`
+	DepartTime    time.Time `json:"departtime" db:"depart_time"`
+	ArriveAirport string    `json:"arriveairport" db:"arrive_airport"`
+	ArriveTime    time.Time `json:"arrivetime" db:"arrive_time"`
+}
+
+var dbmap *gorp.DbMap
+
+func initDB() error {
+	db, err := sql.Open(dbType, connectStr)
+
+	if checkErr(err, "Database connection failed, sql.Open") {
+		return err
+	}
+
+	if dbmap == nil {
+		dbmap = &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
+	}
+
+	return nil
+}
 
 // a custom type that we can use for handling errors and formatting responses
 type handler func(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError)
@@ -74,19 +119,24 @@ func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s %s %s %d", r.RemoteAddr, r.Method, r.URL, 200)
 }
 
-func listFlights( w http.ResponseWriter, r *http.Request ) ( interface{}, *handlerError) {
-	con, err := sql.Open("mysql", "ars:ARSePassW0rd@/ARSdb")
-	if err != nil {
-	  log.Fatal( err )
-	}
-	defer con.Close()
-
-	rows, err := con.Query("select * from flights")
-	if err != nil {
-	  log.Fatal( err )
+func listFlights(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
+	var flights []Flight
+	_, err := dbmap.Select(&flights, "select f.id, f.id_str, da.short_name as depart_airport, f.depart_time, aa.short_name as arrive_airport, f.arrive_time from flights f, airports da, airports aa where f.depart_airport=da.id and f.arrive_airport=aa.id")
+	if checkErr(err, "select from flights") {
+		return nil, nil
 	}
 
-	return rows, nil
+	return flights, nil
+}
+
+func listAirports(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
+	var airports []Airport
+	_, err := dbmap.Select(&airports, "select id, short_name, long_name from airports")
+	if checkErr(err, "select from airports") {
+		return nil, nil
+	}
+
+	return airports, nil
 }
 
 func listTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
@@ -94,7 +144,7 @@ func listTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerE
 }
 
 func getTicketID(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
-	return selected_ticket_id, nil;
+	return selected_ticket_id, nil
 }
 
 func getTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
@@ -201,10 +251,17 @@ func main() {
 	fs := http.Dir(*dir)
 	fileHandler := http.FileServer(fs)
 
+	// Initialize table mappings
+	err := initDB()
+	if err != nil {
+		return
+	}
+
 	// setup routes
 	router := mux.NewRouter()
 	router.Handle("/", http.RedirectHandler("/static/", 302))
 	router.Handle("/flights", handler(listFlights)).Methods("GET")
+	router.Handle("/airports", handler(listAirports)).Methods("GET")
 	router.Handle("/tickets", handler(listTickets)).Methods("GET")
 	router.Handle("/tickets", handler(addTicket)).Methods("POST")
 	router.Handle("/selected_ticket_id", handler(getTicketID)).Methods("GET")
@@ -223,6 +280,6 @@ func main() {
 
 	addr := fmt.Sprintf(":%d", *port)
 	// this call blocks -- the progam runs here forever
-	err := http.ListenAndServe(addr, nil)
+	err = http.ListenAndServe(addr, nil)
 	fmt.Println(err.Error())
 }
