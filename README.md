@@ -115,6 +115,7 @@ loaded under Vagrant):
      $ cd $GOPATH
      $ go get github.com/gorilla/mux
      $ go get github.com/go-sql-driver/mysql
+     $ go get gopkg.in/gorp.v1
 
 Then, build the ARS web server binary:
 
