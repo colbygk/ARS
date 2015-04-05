@@ -33,16 +33,14 @@ then
   then
     mysql -uroot -paRSdev ARSdb < schema/ars.sql
   fi
-  if [ ! -d go/src/github.com ];
-  then
-    export GOPATH=${TM8DEV}/go
-    echo "export GOPATH=${GOPATH}" >> ~vagrant/.bashrc
-    cd $GOPATH
-    go get github.com/gorilla/mux
-    go get github.com/go-sql-driver/mysql
-    cd ars-server
-    go build
-    ./ars-launch >& ars-server.log &
-  fi
+  export GOPATH=${TM8DEV}/go
+  echo "export GOPATH=${GOPATH}" >> ~vagrant/.bashrc
+  cd $GOPATH
+  go get github.com/gorilla/mux
+  go get github.com/go-sql-driver/mysql
+  go get gopkg.in/gorp.v1
+  cd ars-server
+  go build -a
+  ./ars-launch >& ars-server.log &
 fi
 
