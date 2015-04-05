@@ -10,6 +10,9 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+
+        "database/sql"
+        _ "github.com/go-sql-driver/mysql"
 )
 
 // error response contains everything we need to use http.Error
@@ -69,6 +72,21 @@ func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(bytes)
 	log.Printf("%s %s %s %d", r.RemoteAddr, r.Method, r.URL, 200)
+}
+
+func listFlights( w http.ResponseWriter, r *http.Request ) ( interface{}, *handlerError) {
+	con, err := sql.Open("mysql", "ars:ARSePassW0rd@/ARSdb")
+	if err != nil {
+	  log.Fatal( err )
+	}
+	defer con.Close()
+
+	rows, err := con.Query("select * from flights")
+	if err != nil {
+	  log.Fatal( err )
+	}
+
+	return rows, nil
 }
 
 func listTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
@@ -186,6 +204,7 @@ func main() {
 	// setup routes
 	router := mux.NewRouter()
 	router.Handle("/", http.RedirectHandler("/static/", 302))
+	router.Handle("/flights", handler(listFlights)).Methods("GET")
 	router.Handle("/tickets", handler(listTickets)).Methods("GET")
 	router.Handle("/tickets", handler(addTicket)).Methods("POST")
 	router.Handle("/selected_ticket_id", handler(getTicketID)).Methods("GET")
