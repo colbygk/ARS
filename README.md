@@ -18,18 +18,18 @@ This source tree is comprised of four main components:
 
  The directory tree:
 
-     Vagrantfile
-     bootstrap.sh
-     ...
-     schema
-     schema/ars.sql
-     ...
-     go
-     go/main.go
-     ...
-     web
-     web/css
-     ...
+    Vagrantfile
+    bootstrap.sh
+    ...
+    schema
+    schema/ars.sql
+    ...
+    go
+    go/main.go
+    ...
+    web
+    web/css
+    ...
 
 ## Using Vagrant to build an isolated development Environment
 
