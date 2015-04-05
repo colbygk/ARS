@@ -11,12 +11,12 @@ in the form of a [Vagrant](http://vagrantup.com) vm setup.
 ## General Info
 This source tree is comprised of four main components:
 
- * Vagrant Development Environment Configuration
- * MySQL schema and test data
- * Go based web server
- * AngularJS based Single-Page-Application
+* Vagrant Development Environment Configuration
+* MySQL schema and test data
+* Go based web server
+* AngularJS based Single-Page-Application
 
- The directory tree:
+The directory tree:
 
     Vagrantfile
     bootstrap.sh
@@ -102,35 +102,34 @@ covering 04/27/2015-04/28/2015
 
 ## Building ars-server
 
+If you wish to rebuild the ars-server, you should have GOPATH
+set (already done for you under the Vagrant VM, i.e. you should
+only need to do this if you're not using Vagrant).
+e.g.
 
- If you wish to rebuild the ars-server, you should have GOPATH
- set (already done for you under the Vagrant VM, i.e. you should
- only need to do this if you're not using Vagrant).
- e.g.
+    $ export GOPATH="/Users/colby/Spring2015/CS460/repos/ARS/go"
 
-     $ export GOPATH="/Users/colby/Spring2015/CS460/repos/ARS/go"
-
- Then, move to that directory and ensure dependencies are loaded (already
- loaded under Vagrant):
+Then, move to that directory and ensure dependencies are loaded (already
+loaded under Vagrant):
 
      $ cd $GOPATH
      $ go get github.com/gorilla/mux
      $ go get github.com/go-sql-driver/mysql
 
- Then, build the ARS web server binary:
+Then, build the ARS web server binary:
 
      $ cd ars-server
      $ go build
 
- After this, it will be runnable:
+After this, it will be runnable:
 
      $ ./ars-server -directory="../../web" -port=3500
 
- A UNIXy launcher script is available in the same directory as ars-server, called 'ars-launch'
+A UNIXy launcher script is available in the same directory as ars-server, called 'ars-launch'
 
      $ ./ars-launch
 
- A Windowsy launcher script is also available .
+A Windowsy launcher script is also available .
 
- This script will do essentially the same as the longer command-line above.
+This script will do essentially the same as the longer command-line above.
 
