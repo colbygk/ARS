@@ -11,10 +11,10 @@ in the form of a [Vagrant](http://vagrantup.com) vm setup.
 ## General Info
 This source tree is comprised of four main components:
 
- Vagrant Development Environment Configuration
- MySQL schema and test data
- Go based web server
- AngularJS based Single-Page-Application
+ * Vagrant Development Environment Configuration
+ * MySQL schema and test data
+ * Go based web server
+ * AngularJS based Single-Page-Application
 
  The directory tree:
 
@@ -67,6 +67,22 @@ This should connect you to the VM. You can then do:
 Now you will be in the directory that contains the repository you
 cloned and where you launched this instance of Vagrant.  A copy of
 MySQL is running and testing copy of the database has been loaded.
+
+### Developing from within the Vagrant Instance
+
+The repo in /ARS will be the one that you cloned earlier. However,
+once connected to the Vagrant instance, it will not have access
+to your local ssh keys, nor your particular user information.
+
+Therefore, you should make sure that your user info has been set:
+
+    $ git config --global user.name "First Last"
+    $ git config --global user.email your@email.com
+
+I recommend that you then [add an ssh-key](https://help.github.com/articles/generating-ssh-keys/)
+to allow easy git operations or if you used HTTPS when cloning, [caching
+the credentials](https://help.github.com/articles/caching-your-github-password-in-git/)
+to ease updating.
 
 ## MySQL Testing Database
 
