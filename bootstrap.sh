@@ -11,17 +11,17 @@ sudo apt-get install -y golang-go 2> /dev/null
 
 useradd ars
 
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password @RSdev'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password @RSdev'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password aRSdev'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password aRSdev'
 sudo apt-get install -y mysql-server 2> /dev/null
 sudo apt-get install -y mysql-client 2> /dev/null
 
 if [ ! -f /var/log/dbinstalled ];
 then
-    echo "CREATE USER 'ars'@'localhost' IDENTIFIED BY 'ARSePassW0rd'" | mysql -uroot -p@RSdev
-    echo "CREATE DATABASE ARSdb" | mysql -uroot -p@RSdev
-    echo "GRANT ALL ON ARSdb.* TO 'ars'@'localhost'" | mysql -uroot -p@RSdev
-    echo "flush privileges" | mysql -uroot -p@RSdev
+    echo "CREATE USER 'ars'@'localhost' IDENTIFIED BY 'ARSePassW0rd'" | mysql -uroot -paRSdev
+    echo "CREATE DATABASE ARSdb" | mysql -uroot -paRSdev
+    echo "GRANT ALL ON ARSdb.* TO 'ars'@'localhost'" | mysql -uroot -paRSdev
+    echo "flush privileges" | mysql -uroot -paRSdev
     touch /var/log/dbinstalled
 fi
 
@@ -31,7 +31,7 @@ then
   cd ${TM8DEV}
   if [ -f schema/ars.sql ];
   then
-    mysql -uroot -p@RSdev ARSdb < schema/ars.sql
+    mysql -uroot -paRSdev ARSdb < schema/ars.sql
   fi
   if [ ! -d go/src/github.com ];
   then
