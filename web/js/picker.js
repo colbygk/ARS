@@ -1,7 +1,7 @@
 
 $(function() {
-  $('#depicker').datetimepicker();
-  $('#repicker').datetimepicker();
+  $('#depicker').datetimepicker({format: 'YYYY-MM-DD'});
+  $('#repicker').datetimepicker({format: 'YYYY-MM-DD'});
 
 /*
   $("#depicker").on("dp.change",function (e) {

@@ -126,6 +126,8 @@ func listFlights(w http.ResponseWriter, r *http.Request) (interface{}, *handlerE
 		return nil, nil
 	}
 
+        log.Printf("listFlights called\n");
+
 	return flights, nil
 }
 
