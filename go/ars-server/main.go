@@ -68,7 +68,7 @@ type Flight struct {
 	DepartTime    time.Time `json:"departtime" db:"depart_time"`
 	ArriveAirport string    `json:"arriveairport" db:"arrive_airport"`
 	ArriveTime    time.Time `json:"arrivetime" db:"arrive_time"`
-	//TicketPrice   int    	`json:"ticket_price" db:"price"`
+	TicketPrice   string    `json:"ticketprice" db:"price"`
 }
 
 var dbmap *gorp.DbMap
