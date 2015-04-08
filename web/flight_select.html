@@ -30,8 +30,9 @@
                         <img class="depart-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
                       <div class="col-sm-9" id="{{flight.id}}" ng-click="repick(flight.arriveairport, flight)">
-                        Flight: {{flight.idstr}} {{flight.departtime | date:'short'}}<br/>
+                        Flight: {{flight.ticketprice}} {{flight.departtime | date:'short'}}<br/>
                         <div style="font-size: 1.7em;">{{flight.departairport}} &rarr; {{flight.arriveairport}}</div>
+                        <div class="pull-right" style="font-size: 1.9em;">${{flight.idstr}}</div>
                       </div>
                     </div>
                   </div> <!-- form-group -->
@@ -61,8 +62,9 @@
                         <img class="return-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
                       <div class="col-sm-9" id="{{flight.id}}" ng-click="highlightAirportB(flight)">
-                        Flight: {{flight.idstr}} {{flight.departtime | date:'short'}}<br/>
+                        Flight: {{flight.ticketprice}} {{flight.departtime | date:'short'}}<br/>
                         <div style="font-size: 1.7em;">{{flight.departairport}} &rarr; {{flight.arriveairport}}</div>
+                        <div class="pull-right" style="font-size: 1.9em;">${{flight.idstr}}</div>
                       </div>
                   </div> <!-- form-group -->
                 </div> <!-- col-sm-6 col-md-6 -->
