@@ -39,6 +39,9 @@
           $scope.items = ['flight', 'seat', 'payment','ticket','singleticket'];
           $scope.selection = $scope.items[$scope.sc];
 
+          $scope.flights = Flights.query();
+          $scope.airports = Airports.query();
+
           $scope.seatLayout = 0;
           $scope.afterShow = function() {
             initSeating();
@@ -48,8 +51,37 @@
           $scope.afterHide = function() {
           }
 
-          $scope.repick = function(f) {
-            // console.log(f);
+          // Deselect all flights, clear background color to default
+          $scope.deselectAirportA = function(){
+            var i;
+            for(i=0; i<$scope.flights.length; i++){
+              $scope.flights[i].selectedsource = "orange";
+            }
+          }
+
+          $scope.deselectAirportB = function(){
+            var i;
+            for(i=0; i<$scope.flights.length; i++){
+              $scope.flights[i].selecteddest = "orange";
+            }
+          }
+
+          // Highlighting
+          $scope.highlightAirportA = function(f) {
+            $scope.deselectAirportA();
+            f.selectedsource = "#ffffff"; // white selected color
+          }
+
+          $scope.highlightAirportB = function(f) {
+            $scope.deselectAirportB();
+            f.selecteddest = "#ffffff"; // white selected color
+          }
+
+
+          // Airport A
+          $scope.repick = function(f, f1) {
+            $scope.highlightAirportA(f1);
+            console.log(f);//f1.ticket_price
             $scope.returnq = f;
           }
 
@@ -66,8 +98,6 @@
             $scope.selection = $scope.items[$scope.sc];
           }
 
-          $scope.flights = Flights.query();
-	  $scope.airports = Airports.query();
 
           /*
           $http.get('flights.json').then( function(res) {
@@ -295,4 +325,3 @@
     </div> <!-- container -->
   </body>
 </html>
-

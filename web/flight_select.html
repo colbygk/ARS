@@ -25,11 +25,11 @@
                                 value="{{airport.shortname}}">{{airport.longname}}</option>
                       </select>
                     </div> <!-- airport1 -->
-                    <div ng-repeat="flight in flights | filter:{departairport:departq} | isOnDay:depicker" class="flight-info flight-info-animation row">
+                    <div ng-repeat="flight in flights | filter:{departairport:departq} | isOnDay:depicker" style="background-color: {{flight.selectedsource}};" class="flight-info flight-info-animation row">
                       <div class="col-sm-2">
                         <img class="depart-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
-                      <div class="col-sm-9" id="{{flight.id}}" ng-click="repick(flight.arriveairport)">
+                      <div class="col-sm-9" id="{{flight.id}}" ng-click="repick(flight.arriveairport, flight)">
                         Flight: {{flight.idstr}} {{flight.departtime | date:'short'}}<br/>
                         <div style="font-size: 1.7em;">{{flight.departairport}} &rarr; {{flight.arriveairport}}</div>
                       </div>
@@ -56,11 +56,11 @@
                                 value="{{airport.shortname}}">{{airport.longname}}</option>
                       </select>
                     </div> <!-- airport2 -->
-                    <div ng-repeat="flight in flights | filter:{departairport:returnq} | isOnDay:repicker" class="flight-info flight-info-animation row">
+                    <div ng-repeat="flight in flights | filter:{departairport:returnq} | isOnDay:repicker" style="background-color: {{flight.selecteddest}};"  class="flight-info flight-info-animation row">
                       <div class="col-sm-2">
                         <img class="return-flight" src="images/Airplane_silhouette.svg"/>
                       </div>
-                      <div class="col-sm-9" id="{{flight.id}}">
+                      <div class="col-sm-9" id="{{flight.id}}" ng-click="highlightAirportB(flight)">
                         Flight: {{flight.idstr}} {{flight.departtime | date:'short'}}<br/>
                         <div style="font-size: 1.7em;">{{flight.departairport}} &rarr; {{flight.arriveairport}}</div>
                       </div>
