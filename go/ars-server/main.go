@@ -47,6 +47,8 @@ type ticket struct {
 	Id               int    `json:"id"`
 	BackgroundArrive string `json:"backgroundarrive"`
 	BackgroundDepart string `json:"backgrounddepart"`
+	SelectedSource   string `json:"selectedsource"`
+	SelectedDest     string `json:"selecteddest"`
 }
 
 // list of all of the tickets
@@ -66,6 +68,7 @@ type Flight struct {
 	DepartTime    time.Time `json:"departtime" db:"depart_time"`
 	ArriveAirport string    `json:"arriveairport" db:"arrive_airport"`
 	ArriveTime    time.Time `json:"arrivetime" db:"arrive_time"`
+	//TicketPrice   int    	`json:"ticket_price" db:"price"`
 }
 
 var dbmap *gorp.DbMap
@@ -274,9 +277,9 @@ func main() {
 	http.Handle("/", router)
 
 	// bootstrap some data
-	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4601", "12/4/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
-	tickets = append(tickets, ticket{"Nathan", "Acosta", "Dallas, TX", "Albuquerque, NM", "NMA4603", "12/5/2015", getNextId(), "./images/dal_flight_img.png", "./images/alb_flight_img.png"})
-	tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4602", "12/8/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
+	//tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4601", "12/4/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
+	//tickets = append(tickets, ticket{"Nathan", "Acosta", "Dallas, TX", "Albuquerque, NM", "NMA4603", "12/5/2015", getNextId(), "./images/dal_flight_img.png", "./images/alb_flight_img.png"})
+	//tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4602", "12/8/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
 
 	log.Printf("Running on port %d\n", *port)
 
