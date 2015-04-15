@@ -1,17 +1,18 @@
 package main
 
 import (
+	"os"
+	"time"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"log"
-	"net/http"
+	"encoding/gob"	
 	"strconv"
-	"time"
-
 	"github.com/gorilla/mux"
-
+	"net/http"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/gorp.v1"
@@ -20,7 +21,11 @@ import (
 var connectStr = "ars:ARSePassW0rd@/ARSdb?parseTime=true"
 var dbType = "mysql"
 
-func checkErr(err error, msg string) bool {
+//
+var flights []Flight
+var airports []Airport
+
+func checkErrDB(err error, msg string) bool {
 
 	if err != nil {
 		log.Fatalln(msg, err)
@@ -90,6 +95,16 @@ func initDB() error {
 // a custom type that we can use for handling errors and formatting responses
 type handler func(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError)
 
+
+func checkErr(err error, msg string) bool {
+
+	if err != nil {
+		log.Fatalln(msg, err)
+	}
+
+	return err != nil
+}
+
 // attach the standard ServeHTTP method to our handler so the http library can call it
 func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// here we could do some prep work before calling the handler if we wanted to
@@ -122,29 +137,30 @@ func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s %s %s %d", r.RemoteAddr, r.Method, r.URL, 200)
 }
 
-func listFlights(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
-	var flights []Flight
-	_, err := dbmap.Select(&flights, "select f.id, f.id_str, da.short_name as depart_airport, f.depart_time, aa.short_name as arrive_airport, f.arrive_time from flights f, airports da, airports aa where f.depart_airport=da.id and f.arrive_airport=aa.id")
-	if checkErr(err, "select from flights") {
-		return nil, nil
-	}
+func listFlights(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {	
+	// DB interface call
+	//listFlightsDB(&flights, w, r)
+	testing(&flights, &airports)
+	fmt.Printf("\n--List Flights--\n");
 
-        log.Printf("listFlights called\n");
-
+	// Return DB json info
 	return flights, nil
 }
 
 func listAirports(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
-	var airports []Airport
+	fmt.Printf("\n--List Airports--\n");
+
+	/*
 	_, err := dbmap.Select(&airports, "select id, short_name, long_name from airports")
 	if checkErr(err, "select from airports") {
 		return nil, nil
-	}
+	}*/
 
 	return airports, nil
 }
 
 func listTickets(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
+	fmt.Printf("List Tickets");
 	return tickets, nil
 }
 
@@ -246,6 +262,90 @@ func getNextId() int {
 	return id
 }
 
+type P struct {
+    M, N int64
+    A string
+}
+
+type Packet struct {
+	Flights []Flight
+	Airports []Airport
+}
+
+func handleConnection(conn net.Conn, flights *[]Flight, airports *[]Airport) {
+    dec := gob.NewDecoder(conn)
+    p := &Packet{}
+ 
+    dec.Decode(p)
+    flights = &p.Flights
+    airports = &p.Airports
+    //tickets = &p.Tickets
+
+    fmt.Printf("Received : %+v", airports);
+}
+
+
+func startDBInterface2() {
+
+	// Dial out to send request
+    fmt.Println("I want to send some data to DB interface");
+    conn, err := net.Dial("tcp", "localhost:8080")
+
+    if err != nil {
+        log.Fatal("Connection error", err)
+    }
+    
+    encoder := gob.NewEncoder(conn)
+    p := Packet{}
+
+    // Send a request asking for flights[]
+    fmt.Printf("Sending empty packet as request");
+    encoder.Encode(p)
+
+    // Recive flights[] from proxy
+    dec := gob.NewDecoder(conn)
+    p2 := Packet{}
+    dec.Decode(p2)
+    fmt.Printf("Received : %+v", p);
+
+    // Close connection and listen for reply
+    conn.Close()
+    fmt.Println("done");
+}
+
+func testing(flights *[]Flight, airports *[]Airport) {
+    strEcho := "Asking DB interface"
+    servAddr := "localhost:8080"
+
+    tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
+    if err != nil {
+        println("ResolveTCPAddr failed:", err.Error())
+        os.Exit(1)
+    }
+ 
+    conn, err := net.DialTCP("tcp", nil, tcpAddr)
+    if err != nil {
+        println("Dial failed:", err.Error())
+        os.Exit(1)
+    }
+ 
+ 	// Send a small packet to let the DB proxy know to send the flight information
+ 	// This is where we can add in the date information
+ 	// And other searching info.
+    _, err = conn.Write([]byte(strEcho))
+    if err != nil {
+        println("Write to server failed:", err.Error())
+        os.Exit(1)
+    }
+ 
+    println("write to server = ", strEcho)
+ 
+    // Handle the reply
+    handleConnection(conn, flights, airports)
+    conn.Close()
+}
+
+
 func main() {
 	// command line flags
 	port := flag.Int("port", 80, "port to serve on")
@@ -277,13 +377,9 @@ func main() {
 	http.Handle("/", router)
 
 	// bootstrap some data
-	//tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4601", "12/4/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
-	//tickets = append(tickets, ticket{"Nathan", "Acosta", "Dallas, TX", "Albuquerque, NM", "NMA4603", "12/5/2015", getNextId(), "./images/dal_flight_img.png", "./images/alb_flight_img.png"})
-	//tickets = append(tickets, ticket{"Nathan", "Acosta", "Albuquerque, NM", "Dallas, TX", "NMA4602", "12/8/2015", getNextId(), "./images/alb_flight_img.png", "./images/dal_flight_img.png"})
-
 	log.Printf("Running on port %d\n", *port)
-
 	addr := fmt.Sprintf(":%d", *port)
+
 	// this call blocks -- the progam runs here forever
 	err = http.ListenAndServe(addr, nil)
 	fmt.Println(err.Error())
