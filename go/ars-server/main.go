@@ -18,22 +18,6 @@ import (
 	"gopkg.in/gorp.v1"
 )
 
-var connectStr = "ars:ARSePassW0rd@/ARSdb?parseTime=true"
-var dbType = "mysql"
-
-//
-var flights []Flight
-var airports []Airport
-
-func checkErrDB(err error, msg string) bool {
-
-	if err != nil {
-		log.Fatalln(msg, err)
-	}
-
-	return err != nil
-}
-
 // error response contains everything we need to use http.Error
 type handlerError struct {
 	Error   error
@@ -56,10 +40,6 @@ type ticket struct {
 	SelectedDest     string `json:"selecteddest"`
 }
 
-// list of all of the tickets
-var tickets = make([]ticket, 0)
-var selected_ticket_id = 0
-
 type Airport struct {
 	Id        int    `json:"id"`
 	ShortName string `json:"shortname" db:"short_name"`
@@ -76,7 +56,29 @@ type Flight struct {
 	TicketPrice   string    `json:"ticketprice" db:"price"`
 }
 
+// 
 var dbmap *gorp.DbMap
+var connectStr = "ars:ARSePassW0rd@/ARSdb?parseTime=true"
+var dbType = "mysql"
+
+//
+var flights []Flight
+var airports []Airport
+
+// list of all of the tickets
+var tickets = make([]ticket, 0)
+var selected_ticket_id = 0
+
+
+// Check errors
+func checkErrDB(err error, msg string) bool {
+
+	if err != nil {
+		log.Fatalln(msg, err)
+	}
+
+	return err != nil
+}
 
 func initDB() error {
 	db, err := sql.Open(dbType, connectStr)
@@ -138,10 +140,10 @@ func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func listFlights(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {	
-	// DB interface call
-	//listFlightsDB(&flights, w, r)
-	testing(&flights, &airports)
 	fmt.Printf("\n--List Flights--\n");
+
+	// DB interface call
+	HandleDBInterface()
 
 	// Return DB json info
 	return flights, nil
@@ -272,48 +274,20 @@ type Packet struct {
 	Airports []Airport
 }
 
-func handleConnection(conn net.Conn, flights *[]Flight, airports *[]Airport) {
+func handleConnection(conn net.Conn) {
     dec := gob.NewDecoder(conn)
     p := &Packet{}
  
     dec.Decode(p)
-    flights = &p.Flights
-    airports = &p.Airports
+    flights = p.Flights
+    airports = p.Airports
     //tickets = &p.Tickets
 
     fmt.Printf("Received : %+v", airports);
 }
 
 
-func startDBInterface2() {
-
-	// Dial out to send request
-    fmt.Println("I want to send some data to DB interface");
-    conn, err := net.Dial("tcp", "localhost:8080")
-
-    if err != nil {
-        log.Fatal("Connection error", err)
-    }
-    
-    encoder := gob.NewEncoder(conn)
-    p := Packet{}
-
-    // Send a request asking for flights[]
-    fmt.Printf("Sending empty packet as request");
-    encoder.Encode(p)
-
-    // Recive flights[] from proxy
-    dec := gob.NewDecoder(conn)
-    p2 := Packet{}
-    dec.Decode(p2)
-    fmt.Printf("Received : %+v", p);
-
-    // Close connection and listen for reply
-    conn.Close()
-    fmt.Println("done");
-}
-
-func testing(flights *[]Flight, airports *[]Airport) {
+func HandleDBInterface() {
     strEcho := "Asking DB interface"
     servAddr := "localhost:8080"
 
@@ -341,7 +315,7 @@ func testing(flights *[]Flight, airports *[]Airport) {
     println("write to server = ", strEcho)
  
     // Handle the reply
-    handleConnection(conn, flights, airports)
+    handleConnection(conn)
     conn.Close()
 }
 
